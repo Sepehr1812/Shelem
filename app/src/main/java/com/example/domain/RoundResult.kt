@@ -33,5 +33,7 @@ enum class Team {
 data class CalculatedRoundScores(
     val team1FinalScore: Int,
     val team2FinalScore: Int,
-    val result: RoundResult
+    val result: RoundResult,
+    val team1RestrictedBy1000: Boolean = false,
+    val team2RestrictedBy1000: Boolean = false
 )

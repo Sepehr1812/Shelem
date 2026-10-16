@@ -15,5 +15,6 @@ data class GameEntity(
     val team2Player2Name: String,
     val targetScore: Int = 1165,
     val createdAt: Long = System.currentTimeMillis(),
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val winHandOnlyOver1000: Boolean = true
 )

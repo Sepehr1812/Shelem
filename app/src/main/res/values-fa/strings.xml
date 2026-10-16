@@ -138,4 +138,10 @@
     <string name="round_delta_format">امتیاز این دست: %1$s</string>
     <string name="tap_point_hint">برای مشاهده جزئیات هر دست، روی نقاط نمودار لمس کنید</string>
     <string name="close">بستن</string>
+
+    <string name="game_rules_title">قوانین بازی</string>
+    <string name="rule_1000_title">قانون امتیاز ۱۰۰۰ و بالاتر</string>
+    <string name="rule_1000_desc">وقتی امتیاز تیمی به ۱۰۰۰ یا بالاتر می‌رسد، فقط در صورتی در یک دست امتیاز می‌گیرد که آن دست را ببرد.</string>
+    <string name="rule_1000_short_badge">قانون ۱۰۰۰</string>
+    <string name="rule_1000_restricted_notice">طبق قانون ۱۰۰۰، %1$s به دلیل نبردن این دست امتیازی دریافت نکرد (امتیاز: ۰)</string>
 </resources>

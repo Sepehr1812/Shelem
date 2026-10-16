@@ -24,7 +24,8 @@ class ShelemRepository(private val dao: ShelemDao) {
         team1Player2: String,
         team2Player1: String,
         team2Player2: String,
-        targetScore: Int
+        targetScore: Int,
+        winHandOnlyOver1000: Boolean = true
     ): Long {
         val t1Name = team1Name.ifBlank { "$team1Player1 - $team1Player2" }.ifBlank { "تیم ۱" }
         val t2Name = team2Name.ifBlank { "$team2Player1 - $team2Player2" }.ifBlank { "تیم ۲" }
@@ -36,7 +37,8 @@ class ShelemRepository(private val dao: ShelemDao) {
             team1Player2Name = team1Player2.ifBlank { "بازیکن ۲" },
             team2Player1Name = team2Player1.ifBlank { "بازیکن ۳" },
             team2Player2Name = team2Player2.ifBlank { "بازیکن ۴" },
-            targetScore = targetScore
+            targetScore = targetScore,
+            winHandOnlyOver1000 = winHandOnlyOver1000
         )
         return dao.insertGame(game)
     }
@@ -72,8 +74,21 @@ class ShelemRepository(private val dao: ShelemDao) {
         round: RoundEntity,
         hakemCollectedPoints: Int
     ) {
+        val game = dao.getGameByIdOnce(round.gameId)
+        val priorRounds = dao.getRoundsForGameOnce(round.gameId)
+            .filter { it.isCompleted && it.id != round.id && it.roundNumber < round.roundNumber }
+        val priorTeam1Score = priorRounds.sumOf { it.team1FinalScore }
+        val priorTeam2Score = priorRounds.sumOf { it.team2FinalScore }
+
         val hakemTeam = if (round.hakemTeam == 1) Team.TEAM_1 else Team.TEAM_2
-        val calculated = ScoringEngine.computeTeamScores(hakemTeam, round.bidAmount, hakemCollectedPoints)
+        val calculated = ScoringEngine.computeTeamScores(
+            hakemTeam = hakemTeam,
+            bidAmount = round.bidAmount,
+            hakemCollectedPoints = hakemCollectedPoints,
+            team1PriorScore = priorTeam1Score,
+            team2PriorScore = priorTeam2Score,
+            winHandOnlyOver1000 = game?.winHandOnlyOver1000 ?: true
+        )
         val opponentPoints = 165 - hakemCollectedPoints
 
         val (team1Raw, team2Raw) = when (hakemTeam) {
@@ -94,7 +109,6 @@ class ShelemRepository(private val dao: ShelemDao) {
 
         // Check if game should be finished
         val allRounds = dao.getRoundsForGameOnce(round.gameId)
-        val game = dao.getGameByIdOnce(round.gameId)
         if (game != null) {
             val totalTeam1 = allRounds.filter { it.isCompleted }.sumOf { it.team1FinalScore }
             val totalTeam2 = allRounds.filter { it.isCompleted }.sumOf { it.team2FinalScore }
@@ -114,7 +128,19 @@ class ShelemRepository(private val dao: ShelemDao) {
         isNaras: Boolean,
         hakemCollectedPoints: Int
     ): Long {
-        val calculated = ScoringEngine.computeTeamScores(hakemTeam, bidAmount, hakemCollectedPoints)
+        val game = dao.getGameByIdOnce(gameId)
+        val priorRounds = dao.getRoundsForGameOnce(gameId).filter { it.isCompleted }
+        val priorTeam1Score = priorRounds.sumOf { it.team1FinalScore }
+        val priorTeam2Score = priorRounds.sumOf { it.team2FinalScore }
+
+        val calculated = ScoringEngine.computeTeamScores(
+            hakemTeam = hakemTeam,
+            bidAmount = bidAmount,
+            hakemCollectedPoints = hakemCollectedPoints,
+            team1PriorScore = priorTeam1Score,
+            team2PriorScore = priorTeam2Score,
+            winHandOnlyOver1000 = game?.winHandOnlyOver1000 ?: true
+        )
         val opponentPoints = 165 - hakemCollectedPoints
 
         val (team1Raw, team2Raw) = when (hakemTeam) {
@@ -142,7 +168,6 @@ class ShelemRepository(private val dao: ShelemDao) {
 
         // Check if game should be finished
         val allRounds = dao.getRoundsForGameOnce(gameId)
-        val game = dao.getGameByIdOnce(gameId)
         if (game != null) {
             val totalTeam1 = allRounds.filter { it.isCompleted }.sumOf { it.team1FinalScore }
             val totalTeam2 = allRounds.filter { it.isCompleted }.sumOf { it.team2FinalScore }

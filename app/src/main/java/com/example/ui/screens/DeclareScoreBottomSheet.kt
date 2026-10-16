@@ -54,6 +54,8 @@ import kotlin.math.roundToInt
 fun DeclareScoreBottomSheet(
     round: RoundEntity,
     game: GameEntity,
+    team1PriorScore: Int = 0,
+    team2PriorScore: Int = 0,
     onDismiss: () -> Unit,
     onConfirmScore: (round: RoundEntity, hakemCollectedPoints: Int) -> Unit
 ) {
@@ -68,7 +70,14 @@ fun DeclareScoreBottomSheet(
     val hakemTeam = if (round.hakemTeam == 1) Team.TEAM_1 else Team.TEAM_2
     val hakemTeamLabel = if (hakemTeam == Team.TEAM_1) game.team1Name else game.team2Name
 
-    val liveScores = ScoringEngine.computeTeamScores(hakemTeam, round.bidAmount, hakemCollectedPoints)
+    val liveScores = ScoringEngine.computeTeamScores(
+        hakemTeam = hakemTeam,
+        bidAmount = round.bidAmount,
+        hakemCollectedPoints = hakemCollectedPoints,
+        team1PriorScore = team1PriorScore,
+        team2PriorScore = team2PriorScore,
+        winHandOnlyOver1000 = game.winHandOnlyOver1000
+    )
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -259,6 +268,17 @@ fun DeclareScoreBottomSheet(
                         )
                     }
                 }
+            }
+
+            if (liveScores.team1RestrictedBy1000 || liveScores.team2RestrictedBy1000) {
+                val restrictedTeam = if (liveScores.team1RestrictedBy1000) game.team1Name else game.team2Name
+                Text(
+                    text = "⚠️ " + stringResource(R.string.rule_1000_restricted_notice, restrictedTeam),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PersianRed,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
             }
 
             Button(

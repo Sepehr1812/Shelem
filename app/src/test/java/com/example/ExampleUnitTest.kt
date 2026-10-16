@@ -175,5 +175,64 @@ class ExampleUnitTest {
     assertEquals(105, team2Hakem.team1FinalScore)
     assertEquals(-240, team2Hakem.team2FinalScore)
   }
+
+  @Test
+  fun scoringEngine_winHandOnlyOver1000Rule_restrictsLosingTeamWithOver1000Points() {
+    // Scenario 1: Team 1 has 1050 pts (>= 1000). Team 2 is Hakem, bids 110 and makes it (Team 2 wins).
+    // Team 1 collected 55 pts, but lost the hand and has >= 1000 pts -> Team 1 gets 0.
+    val scores1 = com.example.domain.ScoringEngine.computeTeamScores(
+      hakemTeam = com.example.domain.Team.TEAM_2,
+      bidAmount = 110,
+      hakemCollectedPoints = 110,
+      team1PriorScore = 1050,
+      team2PriorScore = 700,
+      winHandOnlyOver1000 = true
+    )
+    assertEquals(0, scores1.team1FinalScore)
+    assertEquals(110, scores1.team2FinalScore)
+    org.junit.Assert.assertTrue(scores1.team1RestrictedBy1000)
+    org.junit.Assert.assertFalse(scores1.team2RestrictedBy1000)
+
+    // Scenario 2: Team 1 has 1050 pts (>= 1000). Team 2 is Hakem, bids 110, but FAILS the bid.
+    // Team 1 set the contract and won the hand -> Team 1 gets full collected points (75).
+    val scores2 = com.example.domain.ScoringEngine.computeTeamScores(
+      hakemTeam = com.example.domain.Team.TEAM_2,
+      bidAmount = 110,
+      hakemCollectedPoints = 90,
+      team1PriorScore = 1050,
+      team2PriorScore = 700,
+      winHandOnlyOver1000 = true
+    )
+    assertEquals(75, scores2.team1FinalScore)
+    assertEquals(-110, scores2.team2FinalScore)
+    org.junit.Assert.assertFalse(scores2.team1RestrictedBy1000)
+
+    // Scenario 3: Team 1 has 1050 pts (>= 1000). Team 1 is Hakem, bids 125, and accomplishes it.
+    // Team 1 won the hand -> Team 1 gets 125.
+    val scores3 = com.example.domain.ScoringEngine.computeTeamScores(
+      hakemTeam = com.example.domain.Team.TEAM_1,
+      bidAmount = 125,
+      hakemCollectedPoints = 125,
+      team1PriorScore = 1050,
+      team2PriorScore = 700,
+      winHandOnlyOver1000 = true
+    )
+    assertEquals(125, scores3.team1FinalScore)
+    assertEquals(40, scores3.team2FinalScore)
+    org.junit.Assert.assertFalse(scores3.team1RestrictedBy1000)
+
+    // Scenario 4: If rule is disabled (winHandOnlyOver1000 = false), losing team with >= 1000 still gets points
+    val scoresDisabled = com.example.domain.ScoringEngine.computeTeamScores(
+      hakemTeam = com.example.domain.Team.TEAM_2,
+      bidAmount = 110,
+      hakemCollectedPoints = 110,
+      team1PriorScore = 1050,
+      team2PriorScore = 700,
+      winHandOnlyOver1000 = false
+    )
+    assertEquals(55, scoresDisabled.team1FinalScore)
+    assertEquals(110, scoresDisabled.team2FinalScore)
+    org.junit.Assert.assertFalse(scoresDisabled.team1RestrictedBy1000)
+  }
 }
 

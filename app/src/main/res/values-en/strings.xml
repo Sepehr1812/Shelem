@@ -138,4 +138,10 @@
     <string name="round_delta_format">Round score: %1$s</string>
     <string name="tap_point_hint">Tap any point on the chart to view round breakdown</string>
     <string name="close">Close</string>
+
+    <string name="game_rules_title">Game Rules</string>
+    <string name="rule_1000_title">1000+ Points Rule</string>
+    <string name="rule_1000_desc">When a team reaches 1000 points or more, it only scores points in a round if it wins that hand.</string>
+    <string name="rule_1000_short_badge">1000 Rule</string>
+    <string name="rule_1000_restricted_notice">Per 1000 Rule, %1$s receives 0 pts because it did not win this hand</string>
 </resources>

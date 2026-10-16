@@ -117,8 +117,10 @@ fun GameBoardScreen(
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
+                        val subtitleText = stringResource(R.string.target_score_label, game.targetScore.toPersianDigits()) +
+                            if (game.winHandOnlyOver1000) " • " + stringResource(R.string.rule_1000_short_badge) else ""
                         Text(
-                            text = stringResource(R.string.target_score_label, game.targetScore.toPersianDigits()),
+                            text = subtitleText,
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -303,9 +305,16 @@ fun GameBoardScreen(
 
     // Modal Sheet for Entering Scores of Ongoing Round
     if (activeRoundForScoreSheet != null) {
+        val targetRound = activeRoundForScoreSheet!!
+        val priorRounds = completedRounds.filter { it.id != targetRound.id && it.roundNumber < targetRound.roundNumber }
+        val priorT1Score = priorRounds.sumOf { it.team1FinalScore }
+        val priorT2Score = priorRounds.sumOf { it.team2FinalScore }
+
         DeclareScoreBottomSheet(
-            round = activeRoundForScoreSheet!!,
+            round = targetRound,
             game = game,
+            team1PriorScore = priorT1Score,
+            team2PriorScore = priorT2Score,
             onDismiss = { activeRoundForScoreSheet = null },
             onConfirmScore = { roundToComplete, hakemPoints ->
                 viewModel.completeRound(roundToComplete, hakemPoints) {

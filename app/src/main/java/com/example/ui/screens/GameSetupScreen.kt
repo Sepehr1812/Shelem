@@ -32,6 +32,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -79,6 +80,8 @@ fun GameSetupScreen(
 
     var targetScoreFloat by remember { mutableFloatStateOf(1165f) }
     val targetScore = targetScoreFloat.roundToInt()
+
+    var winHandOnlyOver1000 by remember { mutableStateOf(true) }
 
     val presetScores = listOf(625, 1165, 1200, 1650)
 
@@ -211,6 +214,50 @@ fun GameSetupScreen(
                 }
             }
 
+            // Optional Rules Card
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = stringResource(R.string.game_rules_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.rule_1000_title),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = stringResource(R.string.rule_1000_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Switch(
+                            checked = winHandOnlyOver1000,
+                            onCheckedChange = { winHandOnlyOver1000 = it },
+                            modifier = Modifier.testTag("rule_1000_switch")
+                        )
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
 
             // Start Game Button
@@ -224,6 +271,7 @@ fun GameSetupScreen(
                         team2Player1 = team2Player1,
                         team2Player2 = team2Player2,
                         targetScore = targetScore,
+                        winHandOnlyOver1000 = winHandOnlyOver1000,
                         onCreated = onGameCreated
                     )
                 },
