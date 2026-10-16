@@ -59,11 +59,11 @@ fun DeclareScoreBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    var hakemPointsFloat by remember { mutableFloatStateOf(100f) }
+    var hakemPointsFloat by remember { mutableFloatStateOf(round.bidAmount.toFloat().coerceIn(0f, 165f)) }
     val hakemCollectedPoints = hakemPointsFloat.roundToInt()
     val opponentCollectedPoints = 165 - hakemCollectedPoints
 
-    val quickPointsPresets = listOf(0, 85, 100, 110, 125, 140, 165)
+    val quickPointsPresets = listOf(110, 115, 120, 125, 130, 135, 140, 145, 165)
 
     val hakemTeam = if (round.hakemTeam == 1) Team.TEAM_1 else Team.TEAM_2
     val hakemTeamLabel = if (hakemTeam == Team.TEAM_1) game.team1Name else game.team2Name

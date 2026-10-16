@@ -95,10 +95,10 @@ fun AddRoundBottomSheet(
     var isShelemClaim by remember { mutableStateOf(false) }
     var isNaras by remember { mutableStateOf(false) }
 
-    var bidAmountFloat by remember { mutableFloatStateOf(100f) }
+    var bidAmountFloat by remember { mutableFloatStateOf(110f) }
     val bidAmount = if (isShelemClaim) 165 else bidAmountFloat.roundToInt()
 
-    val quickBidPresets = listOf(100, 110, 120, 130, 140, 150, 160, 165)
+    val quickBidPresets = listOf(110, 115, 120, 125, 130, 135, 140, 145)
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
