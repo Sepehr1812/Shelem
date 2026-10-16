@@ -167,12 +167,22 @@ fun DeclareScoreBottomSheet(
                             color = MaterialTheme.colorScheme.primary
                         )
 
-                        Text(
-                            text = "${stringResource(R.string.opponent_collected_points)} ${opponentCollectedPoints.toPersianDigits()}",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(R.string.opponent_collected_points) + " ",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = opponentCollectedPoints.toPersianDigits(),
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
