@@ -209,6 +209,18 @@ fun DeclareScoreBottomSheet(
                 ),
                 shape = RoundedCornerShape(14.dp)
             ) {
+                val hakemAccomplished = liveScores.result is RoundResult.BidAccomplished || liveScores.result is RoundResult.Shelem
+                val team1ScoreColor = when {
+                    hakemTeam == Team.TEAM_1 && hakemAccomplished -> EmeraldGreen
+                    hakemTeam == Team.TEAM_1 && !hakemAccomplished -> PersianRed
+                    else -> GoldAccent
+                }
+                val team2ScoreColor = when {
+                    hakemTeam == Team.TEAM_2 && hakemAccomplished -> EmeraldGreen
+                    hakemTeam == Team.TEAM_2 && !hakemAccomplished -> PersianRed
+                    else -> GoldAccent
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -226,7 +238,7 @@ fun DeclareScoreBottomSheet(
                             text = formatScore(liveScores.team1FinalScore),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = team1ScoreColor
                         )
                     }
 
@@ -264,7 +276,7 @@ fun DeclareScoreBottomSheet(
                             text = formatScore(liveScores.team2FinalScore),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = team2ScoreColor
                         )
                     }
                 }
