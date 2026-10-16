@@ -1,0 +1,141 @@
+<resources>
+    <string name="app_name">شلم!</string>
+    <string name="new_game">بازی جدید</string>
+    <string name="ongoing_games">بازی‌های ناتمام</string>
+    <string name="match_history">تاریخچه بازی‌ها</string>
+    <string name="no_ongoing_games">هیچ بازی جاری یا ناتمامی وجود ندارد.</string>
+    <string name="no_history_games">تاریخچه بازی‌های ثبت شده خالی است.</string>
+
+    <string name="team1_default_name">تیم ۱</string>
+    <string name="team2_default_name">تیم ۲</string>
+    <string name="team1_player1_default">سپهر</string>
+    <string name="team1_player2_default">علی</string>
+    <string name="team2_player1_default">آرش</string>
+    <string name="team2_player2_default">رضا</string>
+    <string name="team1_label">تیم ۱ (ما)</string>
+    <string name="team2_label">تیم ۲ (آن‌ها)</string>
+    <string name="team_name_hint">نام اختصاصی تیم</string>
+    <string name="player_1_hint">بازیکن اول</string>
+    <string name="player_2_hint">بازیکن دوم</string>
+
+    <string name="target_score">امتیاز هدف</string>
+    <string name="target_score_hint">مثلاً ۱۱۶۵ یا ۱200</string>
+    <string name="target_score_label">هدف: %1$s امتیاز</string>
+    <string name="target_score_card">هدف: %1$s امتیاز</string>
+    <string name="score_points_value">%1$s امتیاز</string>
+
+    <string name="start_game">شروع بازی</string>
+    <string name="resume_game">ادامه بازی</string>
+    <string name="end_game">اتمام بازی</string>
+    <string name="delete_game">حذف بازی</string>
+    <string name="confirm_delete_game">آیا از حذف این بازی اطمینان دارید؟</string>
+    <string name="yes">بله</string>
+    <string name="no">خیر</string>
+    <string name="cancel">انصراف</string>
+    <string name="save">ثبت</string>
+
+    <string name="add_new_round">ثبت تعهد دست جدید</string>
+    <string name="start_round_with_bid">ثبت تعهد و شروع دست</string>
+    <string name="next_enter_results">بعدی: ثبت نتیجه دست</string>
+    <string name="record_round_result">ثبت نتیجه دست</string>
+    <string name="declare_round_score">ثبت امتیاز این دست 📝</string>
+    <string name="ongoing_round_title">دست در حال بازی ♠️</string>
+    <string name="completed_rounds_title">دست‌های قبلی 📋</string>
+    <string name="status_ongoing">در حال اجرا ⏳</string>
+    <string name="select_hakem_player">انتخاب حاکم (تاج 👑)</string>
+    <string name="select_dealer_player">انتخاب کارت‌پخش‌کن (دیلر 🃏)</string>
+    <string name="bid_amount">تعهد حاکم (خوانده)</string>
+    <string name="shelem_claim">ادعای شلم</string>
+    <string name="shelem_naras">شلم نرس (امتیاز منفی معکوس)</string>
+    <string name="hakem_collected_points">امتیاز کسب شده توسط حاکم</string>
+    <string name="opponent_collected_points">امتیاز تیم مقابل:</string>
+    <string name="calculate_and_save">محاسبه و ثبت دست</string>
+
+    <string name="status_shelem">شلم مثبت (+۳۳۰)</string>
+    <string name="status_negative_shelem">شلم منفی (-۳۳۰)</string>
+    <string name="status_bid_accomplished">پُور شد (تعهد موفق)</string>
+    <string name="status_bid_failed">خالی شد (تعهد ناموفق)</string>
+    <string name="status_shelem_card">شلم مثبت 🎉</string>
+    <string name="status_negative_shelem_card">شلم منفی 💥</string>
+
+    <string name="round_number">دست %1$s</string>
+    <string name="round_delete_confirm">حذف دست %1$s؟</string>
+    <string name="delete_round">حذف دست</string>
+    <string name="confirm_delete_round">آیا از حذف این دست اطمینان دارید؟</string>
+    <string name="finish_game">پایان بازی</string>
+    <string name="confirm_finish_game">آیا از اتمام و پایان دادن به این بازی اطمینان دارید؟</string>
+    <string name="confirm_resume_game">آیا از از سرگیری و ادامه این بازی اطمینان دارید؟</string>
+
+    <string name="game_finished">بازی به پایان رسید!</string>
+    <string name="winner_announcement">تیم برنده: %1$s 🏆</string>
+    <string name="total_score">مجموع امتیازات</string>
+    <string name="lead_margin">اختلاف امتیاز: %1$s</string>
+    <string name="lead_difference_label">اختلاف</string>
+
+    <string name="ai_strategist">استراتژیست و تحلیل‌گر شلم</string>
+    <string name="ai_strategist_prompt_hint">سوال خود درباره قوانین، بیدینگ یا استراتژی دست جاری را بپرسید...</string>
+    <string name="ask_ai">پرسش از هوش مصنوعی</string>
+    <string name="analyzing_game">در حال تحلیل هوشمند بازی و بررسی استراتژی‌ها...</string>
+    <string name="ai_analysis_title">تحلیل و پیشنهاد هوشمند دست</string>
+    <string name="quick_analysis">تحلیل سریع شرایط فعلی بازی</string>
+
+    <string name="toggle_dark_mode">تغییر پوسته (تاریک / روشن)</string>
+    <string name="toggle_language">تغییر زبان (فارسی / انگلیسی)</string>
+    <string name="back">بازگشت</string>
+
+    <string name="no_rounds_recorded">هنوز دستی ثبت نشده است.</string>
+    <string name="no_rounds_desc">برای شروع ثبت تعهد و شروع بازی، دکمه \'ثبت تعهد دست جدید\' را بفشارید.</string>
+    <string name="game_status_finished">بازی پایان‌یافته</string>
+    <string name="game_status_ongoing">بازی در جریان</string>
+    <string name="versus">مقابل</string>
+    <string name="view_game_results">مشاهده کارنامه</string>
+    <string name="continue_scoring">ادامه ثبت امتیاز</string>
+    <string name="naras_badge">نرس</string>
+    <string name="round_info_title">اطلاعات دست %1$s</string>
+    <string name="hakem_prefix">👑 حاکم: </string>
+    <string name="dealer_prefix">🃏 دیلر: </string>
+    <string name="bid_prefix">تعهد: </string>
+    <string name="hakem_label_with_name">👑 حاکم: %1$s (%2$s)</string>
+    <string name="bid_label_with_value">تعهد: %1$s</string>
+    <string name="dealer_label_with_name">🃏 دیلر: %1$s</string>
+    <string name="hakem_points_value">حاکم: %1$s</string>
+    <string name="score_preview">پیش‌نمایش امتیاز</string>
+    <string name="shelem_165">شلم (۱۶۵)</string>
+    <string name="ai_model_desc">مدل Gemini 3.1 Pro (Thinking Mode)</string>
+    <string name="language_fa">فارسی</string>
+    <string name="language_en">English</string>
+    <string name="language_code">فا</string>
+    <string name="next_language_code">EN</string>
+
+    <!-- Game Statistics -->
+    <string name="game_statistics_title">آمار و ارقام بازی</string>
+    <string name="game_statistics_desc">تحلیل جامع دست‌ها، امتیازات و عملکرد تیم‌ها</string>
+    <string name="total_rounds_played">تعداد کل دست‌های بازی‌شده</string>
+    <string name="rounds_count_format">%1$s دست</string>
+    <string name="highest_single_round_score">بالاترین امتیاز تک‌دست</string>
+    <string name="highest_round_detail">دست %1$s توسط %2$s (%3$s امتیاز)</string>
+    <string name="highest_round_empty">هنوز دستی تکمیل نشده است</string>
+    <string name="win_loss_distribution">توزیع برد و باخت دست‌ها</string>
+    <string name="team1_wins_label">بردهای %1$s</string>
+    <string name="team2_wins_label">بردهای %1$s</string>
+    <string name="ties_label">دست‌های مساوی</string>
+    <string name="win_rate_format">%1$s (%2$s%%)</string>
+    <string name="bidding_performance">عملکرد تعهد و حاکمی</string>
+    <string name="successful_bids">تعهد موفق (خوانده و شده)</string>
+    <string name="failed_bids">تعهد ناموفق (افتاده)</string>
+    <string name="average_score_title">میانگین امتیاز هر دست</string>
+    <string name="special_events_title">رویدادهای خاص</string>
+    <string name="shelems_count">شلم‌های ثبت‌شده: %1$s</string>
+    <string name="naras_count">دست‌های نرس: %1$s</string>
+    <string name="dealer_rotation_badge">گردش نوبت دیلر (دست قبلی: %1$s)</string>
+    <string name="first_round_dealer_hint">نوبت دست‌دهنده اول بازی</string>
+    <string name="score_progression_title">نمودار روند امتیازات تجمیعی</string>
+    <string name="score_progression_subtitle">تغییرات مجموع امتیازات دو تیم در طول دست‌های بازی</string>
+    <string name="chart_start_point">شروع</string>
+    <string name="chart_round_label">دست %1$s</string>
+    <string name="target_score_chart_label">سقف برد: %1$s</string>
+    <string name="lead_by_format">%1$s امتیاز برتری %2$s</string>
+    <string name="round_delta_format">امتیاز این دست: %1$s</string>
+    <string name="tap_point_hint">برای مشاهده جزئیات هر دست، روی نقاط نمودار لمس کنید</string>
+    <string name="close">بستن</string>
+</resources>
