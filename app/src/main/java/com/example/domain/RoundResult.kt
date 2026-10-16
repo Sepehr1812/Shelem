@@ -10,7 +10,7 @@ sealed class RoundResult {
     ) : RoundResult()
 
     data class NegativeShelem(
-        override val hakemFinalScore: Int = -330,
+        override val hakemFinalScore: Int,
         override val otherFinalScore: Int
     ) : RoundResult()
 

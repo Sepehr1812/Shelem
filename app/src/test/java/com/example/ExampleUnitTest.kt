@@ -124,5 +124,56 @@ class ExampleUnitTest {
     assertEquals(listOf(165, 165, 265, 100), cumulativeT1)
     assertEquals(listOf(0, 165, 230, 395), cumulativeT2)
   }
+
+  @Test
+  fun scoringEngine_negativeShelem_decreasesDoubleNegativeOfBid() {
+    // When Hakem collects less than 85 points, negative shelem applies:
+    // Hakem receives -2 * bidAmount, and opponent receives collected points (165 - hakemPoints)
+
+    // Scenario 1: Bid is 100, Hakem collects 80 points (< 85)
+    val result100 = com.example.domain.ScoringEngine.calculateRoundScores(bidAmount = 100, hakemCollectedPoints = 80)
+    org.junit.Assert.assertTrue(result100 is com.example.domain.RoundResult.NegativeShelem)
+    assertEquals(-200, result100.hakemFinalScore)
+    assertEquals(85, result100.otherFinalScore)
+
+    // Scenario 2: Bid is 110, Hakem collects 50 points (< 85)
+    val result110 = com.example.domain.ScoringEngine.calculateRoundScores(bidAmount = 110, hakemCollectedPoints = 50)
+    org.junit.Assert.assertTrue(result110 is com.example.domain.RoundResult.NegativeShelem)
+    assertEquals(-220, result110.hakemFinalScore)
+    assertEquals(115, result110.otherFinalScore)
+
+    // Scenario 3: Bid is 125, Hakem collects 0 points (< 85)
+    val result125 = com.example.domain.ScoringEngine.calculateRoundScores(bidAmount = 125, hakemCollectedPoints = 0)
+    org.junit.Assert.assertTrue(result125 is com.example.domain.RoundResult.NegativeShelem)
+    assertEquals(-250, result125.hakemFinalScore)
+    assertEquals(165, result125.otherFinalScore)
+
+    // Scenario 4: Bid is 165 (full Shelem), Hakem collects 84 points (< 85)
+    val result165 = com.example.domain.ScoringEngine.calculateRoundScores(bidAmount = 165, hakemCollectedPoints = 84)
+    org.junit.Assert.assertTrue(result165 is com.example.domain.RoundResult.NegativeShelem)
+    assertEquals(-330, result165.hakemFinalScore)
+    assertEquals(81, result165.otherFinalScore)
+  }
+
+  @Test
+  fun scoringEngine_teamScoreMapping_accountsForHakemTeam() {
+    // Team 1 is Hakem, bid 100, collects 70 points -> Team 1 gets -200, Team 2 gets 95
+    val team1Hakem = com.example.domain.ScoringEngine.computeTeamScores(
+      hakemTeam = com.example.domain.Team.TEAM_1,
+      bidAmount = 100,
+      hakemCollectedPoints = 70
+    )
+    assertEquals(-200, team1Hakem.team1FinalScore)
+    assertEquals(95, team1Hakem.team2FinalScore)
+
+    // Team 2 is Hakem, bid 120, collects 60 points -> Team 1 gets 105, Team 2 gets -240
+    val team2Hakem = com.example.domain.ScoringEngine.computeTeamScores(
+      hakemTeam = com.example.domain.Team.TEAM_2,
+      bidAmount = 120,
+      hakemCollectedPoints = 60
+    )
+    assertEquals(105, team2Hakem.team1FinalScore)
+    assertEquals(-240, team2Hakem.team2FinalScore)
+  }
 }
 

@@ -52,11 +52,11 @@
     <string name="calculate_and_save">Calculate &amp; Save Round</string>
 
     <string name="status_shelem">Shelem (+330)</string>
-    <string name="status_negative_shelem">Negative Shelem (-330)</string>
+    <string name="status_negative_shelem">Double Negative</string>
     <string name="status_bid_accomplished">Bid Made (Accomplished)</string>
     <string name="status_bid_failed">Bid Failed (Set)</string>
     <string name="status_shelem_card">Shelem (+330) 🎉</string>
-    <string name="status_negative_shelem_card">Negative Shelem (-330) 💥</string>
+    <string name="status_negative_shelem_card">Double Negative 💥</string>
 
     <string name="round_number">Round %1$s</string>
     <string name="round_delete_confirm">Delete Round %1$s?</string>

@@ -39,9 +39,12 @@ import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.GameEntity
 import com.example.data.RoundEntity
+import com.example.domain.RoundResult
 import com.example.domain.ScoringEngine
 import com.example.domain.Team
+import com.example.ui.theme.EmeraldGreen
 import com.example.ui.theme.GoldAccent
+import com.example.ui.theme.PersianRed
 import com.example.util.PersianNumberHelper.formatScore
 import com.example.util.PersianNumberHelper.toPersianDigits
 import kotlin.math.roundToInt
@@ -218,12 +221,29 @@ fun DeclareScoreBottomSheet(
                         )
                     }
 
-                    Text(
-                        text = stringResource(R.string.score_preview),
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.outline
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = stringResource(R.string.score_preview),
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        val outcomeBadge = when (liveScores.result) {
+                            is RoundResult.Shelem -> stringResource(R.string.status_shelem_card)
+                            is RoundResult.NegativeShelem -> stringResource(R.string.status_negative_shelem_card)
+                            is RoundResult.BidAccomplished -> stringResource(R.string.status_bid_accomplished)
+                            is RoundResult.BidFailed -> stringResource(R.string.status_bid_failed)
+                        }
+                        Text(
+                            text = outcomeBadge,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = when (liveScores.result) {
+                                is RoundResult.Shelem, is RoundResult.BidAccomplished -> EmeraldGreen
+                                else -> PersianRed
+                            }
+                        )
+                    }
 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(

@@ -17,7 +17,10 @@ object ScoringEngine {
                 RoundResult.Shelem() // Positive Shelem (+330)
             }
             hakemCollectedPoints < 85 -> {
-                RoundResult.NegativeShelem(otherFinalScore = otherTeamCollectedPoints) // Couldn't get half of 165 (-330)
+                RoundResult.NegativeShelem(
+                    hakemFinalScore = -2 * bidAmount,
+                    otherFinalScore = otherTeamCollectedPoints
+                ) // Double Negative: double negative of the bid (-2 * bidAmount)
             }
             hakemCollectedPoints >= bidAmount -> {
                 RoundResult.BidAccomplished(

@@ -52,11 +52,11 @@
     <string name="calculate_and_save">محاسبه و ثبت دست</string>
 
     <string name="status_shelem">شلم مثبت (+۳۳۰)</string>
-    <string name="status_negative_shelem">شلم منفی (-۳۳۰)</string>
+    <string name="status_negative_shelem">دوبل منفی</string>
     <string name="status_bid_accomplished">پُور شد (تعهد موفق)</string>
     <string name="status_bid_failed">خالی شد (تعهد ناموفق)</string>
     <string name="status_shelem_card">شلم مثبت 🎉</string>
-    <string name="status_negative_shelem_card">شلم منفی 💥</string>
+    <string name="status_negative_shelem_card">دوبل منفی 💥</string>
 
     <string name="round_number">دست %1$s</string>
     <string name="round_delete_confirm">حذف دست %1$s؟</string>
