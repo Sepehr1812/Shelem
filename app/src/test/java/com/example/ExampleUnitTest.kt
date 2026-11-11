@@ -234,5 +234,29 @@ class ExampleUnitTest {
     assertEquals(110, scoresDisabled.team2FinalScore)
     org.junit.Assert.assertFalse(scoresDisabled.team1RestrictedBy1000)
   }
+
+  @Test
+  fun persianNumberHelper_formatScore_removesPlusSignAndFormatsNegativeCorrectly() {
+    val originalLocale = java.util.Locale.getDefault()
+    try {
+      // Test Persian locale
+      java.util.Locale.setDefault(java.util.Locale("fa", "IR"))
+      // Positive score: no '+' sign, converted to Persian digits
+      assertEquals("۱۶۵", com.example.util.PersianNumberHelper.formatScore(165))
+      assertEquals("۰", com.example.util.PersianNumberHelper.formatScore(0))
+      // Negative score: minus sign in front of digits
+      assertEquals("۲۲۰-", com.example.util.PersianNumberHelper.formatScore(-220))
+      assertEquals("۱۱۰-", com.example.util.PersianNumberHelper.formatScore(-110))
+
+      // Test English locale
+      java.util.Locale.setDefault(java.util.Locale.ENGLISH)
+      assertEquals("165", com.example.util.PersianNumberHelper.formatScore(165))
+      assertEquals("0", com.example.util.PersianNumberHelper.formatScore(0))
+      assertEquals("-220", com.example.util.PersianNumberHelper.formatScore(-220))
+      assertEquals("-110", com.example.util.PersianNumberHelper.formatScore(-110))
+    } finally {
+      java.util.Locale.setDefault(originalLocale)
+    }
+  }
 }
 

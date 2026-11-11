@@ -53,6 +53,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.R
@@ -523,27 +524,36 @@ private fun ScoreBoardHeader(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Team 1 Total
-                Column(horizontalAlignment = Alignment.Start) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.Start
+                ) {
                     Text(
                         text = game.team1Name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "${game.team1Player1Name} & ${game.team1Player2Name}",
+                        text = "${game.team1Player1Name} - ${game.team1Player2Name}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = formatScore(totalTeam1Score),
-                        style = MaterialTheme.typography.displayLarge,
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         color = when {
                             totalTeam1Score > totalTeam2Score -> EmeraldGreen
                             totalTeam1Score < 0 -> PersianRed
                             else -> MaterialTheme.colorScheme.onPrimaryContainer
-                        }
+                        },
+                        maxLines = 1
                     )
                 }
 
@@ -552,6 +562,7 @@ private fun ScoreBoardHeader(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
+                        .padding(horizontal = 8.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .clickable(onClick = onOpenStatistics)
                         .testTag("header_statistics_badge")
@@ -562,11 +573,20 @@ private fun ScoreBoardHeader(
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = "${stringResource(R.string.lead_difference_label)}\n${margin.toPersianDigits()}",
+                            text = stringResource(R.string.lead_difference_label),
                             style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
+                        Text(
+                            text = margin.toPersianDigits(),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.onSurface,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Icon(
@@ -579,27 +599,36 @@ private fun ScoreBoardHeader(
                 }
 
                 // Team 2 Total
-                Column(horizontalAlignment = Alignment.End) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.End
+                ) {
                     Text(
                         text = game.team2Name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
-                        text = "${game.team2Player1Name} & ${game.team2Player2Name}",
+                        text = "${game.team2Player1Name} - ${game.team2Player2Name}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = formatScore(totalTeam2Score),
-                        style = MaterialTheme.typography.displayLarge,
+                        style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         color = when {
                             totalTeam2Score > totalTeam1Score -> EmeraldGreen
                             totalTeam2Score < 0 -> PersianRed
                             else -> MaterialTheme.colorScheme.onPrimaryContainer
-                        }
+                        },
+                        maxLines = 1
                     )
                 }
             }

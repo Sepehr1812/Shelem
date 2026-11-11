@@ -29,19 +29,35 @@ object PersianNumberHelper {
     }
 
     fun Int.toPersianDigits(): String {
-        return this.toString().toPersianDigits()
+        return if (this < 0 && isPersianLocale()) {
+            "${kotlin.math.abs(this).toString().toPersianDigits()}-"
+        } else {
+            this.toString().toPersianDigits()
+        }
     }
 
     fun Long.toPersianDigits(): String {
-        return this.toString().toPersianDigits()
+        return if (this < 0 && isPersianLocale()) {
+            "${kotlin.math.abs(this).toString().toPersianDigits()}-"
+        } else {
+            this.toString().toPersianDigits()
+        }
     }
 
     fun formatScore(score: Int): String {
-        val sign = when {
-            score > 0 -> "+"
-            else -> ""
+        return when {
+            score < 0 -> {
+                val absVal = kotlin.math.abs(score)
+                if (isPersianLocale()) {
+                    "${absVal.toString().toPersianDigits()}-"
+                } else {
+                    "-$absVal"
+                }
+            }
+            else -> {
+                score.toString().toPersianDigits()
+            }
         }
-        return "$sign${score.toPersianDigits()}"
     }
 
     fun parsePersianInt(input: String): Int? {
