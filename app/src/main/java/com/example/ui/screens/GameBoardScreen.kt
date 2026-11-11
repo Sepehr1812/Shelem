@@ -22,6 +22,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material3.AlertDialog
@@ -87,6 +88,7 @@ fun GameBoardScreen(
     var showFinishGameConfirmation by remember { mutableStateOf(false) }
     var showResumeGameConfirmation by remember { mutableStateOf(false) }
     var showStatisticsSheet by remember { mutableStateOf(false) }
+    var showExportCsvSheet by remember { mutableStateOf(false) }
 
     val ongoingRound = rounds.find { !it.isCompleted || it.status == "Ongoing" }
     val listState = rememberLazyListState()
@@ -140,12 +142,12 @@ fun GameBoardScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { showStatisticsSheet = true },
-                        modifier = Modifier.testTag("game_statistics_button")
+                        onClick = { showExportCsvSheet = true },
+                        modifier = Modifier.testTag("export_csv_button")
                     ) {
                         Icon(
-                            imageVector = Icons.Default.BarChart,
-                            contentDescription = stringResource(R.string.game_statistics_title),
+                            imageVector = Icons.Default.FileDownload,
+                            contentDescription = stringResource(R.string.export_csv_action),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -162,7 +164,7 @@ fun GameBoardScreen(
                         Icon(
                             imageVector = Icons.Default.Flag,
                             contentDescription = if (isFinished) stringResource(R.string.resume_game) else stringResource(R.string.end_game),
-                            tint = if (isFinished) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                            tint = if (isFinished) EmeraldGreen else PersianRed
                         )
                     }
                 },
@@ -374,7 +376,17 @@ fun GameBoardScreen(
         GameStatisticsBottomSheet(
             game = game,
             rounds = rounds,
-            onDismiss = { showStatisticsSheet = false }
+            onDismiss = { showStatisticsSheet = false },
+            onExportCsv = { showExportCsvSheet = true }
+        )
+    }
+
+    // Export CSV Bottom Sheet
+    if (showExportCsvSheet) {
+        ExportCsvBottomSheet(
+            game = game,
+            rounds = rounds,
+            onDismiss = { showExportCsvSheet = false }
         )
     }
 

@@ -144,4 +144,41 @@
     <string name="rule_1000_desc">وقتی امتیاز تیمی به ۱۰۰۰ یا بالاتر می‌رسد، فقط در صورتی در یک دست امتیاز می‌گیرد که آن دست را ببرد.</string>
     <string name="rule_1000_short_badge">قانون ۱۰۰۰</string>
     <string name="rule_1000_restricted_notice">طبق قانون ۱۰۰۰، %1$s به دلیل نبردن این دست امتیازی دریافت نکرد (امتیاز: ۰)</string>
+
+    <!-- CSV Export Strings -->
+    <string name="export_csv_action">خروجی CSV</string>
+    <string name="export_csv_title">خروجی فایل اکسل و CSV</string>
+    <string name="export_csv_description">دریافت و ذخیره کارنامه کامل بازی شامل جزئیات تمام دست‌ها، تعهدات و امتیازات به فرمت CSV</string>
+    <string name="export_csv_save">ذخیره فایل در گوشی</string>
+    <string name="export_csv_share">اشتراک‌گذاری فایل</string>
+    <string name="export_csv_success">فایل CSV با موفقیت ذخیره شد</string>
+    <string name="export_csv_error">خطا در ذخیره فایل CSV</string>
+    <string name="export_csv_share_subject">کارنامه بازی شلم - %1$s در برابر %2$s</string>
+    <string name="csv_game_summary_header">خلاصه بازی شلم</string>
+    <string name="csv_field_game_id">شناسه بازی</string>
+    <string name="csv_field_date">تاریخ</string>
+    <string name="csv_field_target_score">سقف امتیاز</string>
+    <string name="csv_field_rule_1000">قانون امتیاز ۱۰۰۰</string>
+    <string name="csv_field_status">وضعیت بازی</string>
+    <string name="csv_field_winner">تیم برنده</string>
+    <string name="csv_field_active">فعال</string>
+    <string name="csv_field_inactive">غیرفعال</string>
+    <string name="csv_status_finished">پایان یافته</string>
+    <string name="csv_status_ongoing">در حال اجرا</string>
+    <string name="csv_header_round">دست</string>
+    <string name="csv_header_hakem_team">تیم حاکم</string>
+    <string name="csv_header_hakem_player">بازیکن حاکم</string>
+    <string name="csv_header_dealer">دست‌دهنده (دیلر)</string>
+    <string name="csv_header_bid">تعهد</string>
+    <string name="csv_header_claim_type">نوع تعهد</string>
+    <string name="csv_header_t1_raw">شمارش %1$s</string>
+    <string name="csv_header_t2_raw">شمارش %1$s</string>
+    <string name="csv_header_t1_score">امتیاز %1$s</string>
+    <string name="csv_header_t2_score">امتیاز %1$s</string>
+    <string name="csv_header_t1_total">مجموع %1$s</string>
+    <string name="csv_header_t2_total">مجموع %1$s</string>
+    <string name="csv_header_result">نتیجه دست</string>
+    <string name="csv_claim_normal">عادی</string>
+    <string name="csv_claim_shelem">شلم</string>
+    <string name="csv_claim_naras">شلم نارس</string>
 </resources>

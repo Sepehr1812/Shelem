@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material.icons.filled.Star
@@ -34,6 +35,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -65,6 +67,7 @@ fun GameStatisticsBottomSheet(
     game: GameEntity,
     rounds: List<RoundEntity>,
     onDismiss: () -> Unit,
+    onExportCsv: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -173,14 +176,26 @@ fun GameStatisticsBottomSheet(
                         )
                     }
                 }
-                IconButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.testTag("close_game_statistics_button")
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(R.string.close)
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(
+                        onClick = onExportCsv,
+                        modifier = Modifier.testTag("header_export_csv_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FileDownload,
+                            contentDescription = stringResource(R.string.export_csv_action),
+                            tint = GoldAccent
+                        )
+                    }
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.testTag("close_game_statistics_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.close)
+                        )
+                    }
                 }
             }
 
@@ -571,6 +586,26 @@ fun GameStatisticsBottomSheet(
             }
 
             Spacer(modifier = Modifier.height(4.dp))
+
+            OutlinedButton(
+                onClick = onExportCsv,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("statistics_export_csv_action_button"),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.FileDownload,
+                    contentDescription = null,
+                    tint = GoldAccent,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.export_csv_title),
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             Button(
                 onClick = onDismiss,

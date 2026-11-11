@@ -144,4 +144,41 @@
     <string name="rule_1000_desc">When a team reaches 1000 points or more, it only scores points in a round if it wins that hand.</string>
     <string name="rule_1000_short_badge">1000 Rule</string>
     <string name="rule_1000_restricted_notice">Per 1000 Rule, %1$s receives 0 pts because it did not win this hand</string>
+
+    <!-- CSV Export Strings -->
+    <string name="export_csv_action">Export CSV</string>
+    <string name="export_csv_title">Export Game Summary (CSV)</string>
+    <string name="export_csv_description">Export and save full game summary and round-by-round breakdown as a CSV spreadsheet</string>
+    <string name="export_csv_save">Save File to Device</string>
+    <string name="export_csv_share">Share File</string>
+    <string name="export_csv_success">CSV file saved successfully</string>
+    <string name="export_csv_error">Error saving CSV file</string>
+    <string name="export_csv_share_subject">Shelem Game Scorecard - %1$s vs %2$s</string>
+    <string name="csv_game_summary_header">Shelem Game Summary</string>
+    <string name="csv_field_game_id">Game ID</string>
+    <string name="csv_field_date">Date</string>
+    <string name="csv_field_target_score">Target Score</string>
+    <string name="csv_field_rule_1000">1000+ Points Rule</string>
+    <string name="csv_field_status">Game Status</string>
+    <string name="csv_field_winner">Winner</string>
+    <string name="csv_field_active">Enabled</string>
+    <string name="csv_field_inactive">Disabled</string>
+    <string name="csv_status_finished">Finished</string>
+    <string name="csv_status_ongoing">In Progress</string>
+    <string name="csv_header_round">Round</string>
+    <string name="csv_header_hakem_team">Hakem Team</string>
+    <string name="csv_header_hakem_player">Hakem Player</string>
+    <string name="csv_header_dealer">Dealer</string>
+    <string name="csv_header_bid">Bid</string>
+    <string name="csv_header_claim_type">Claim Type</string>
+    <string name="csv_header_t1_raw">%1$s Raw Points</string>
+    <string name="csv_header_t2_raw">%1$s Raw Points</string>
+    <string name="csv_header_t1_score">%1$s Round Score</string>
+    <string name="csv_header_t2_score">%1$s Round Score</string>
+    <string name="csv_header_t1_total">%1$s Cumulative Total</string>
+    <string name="csv_header_t2_total">%1$s Cumulative Total</string>
+    <string name="csv_header_result">Round Status</string>
+    <string name="csv_claim_normal">Normal</string>
+    <string name="csv_claim_shelem">Shelem</string>
+    <string name="csv_claim_naras">Shelem Naras</string>
 </resources>

@@ -258,5 +258,104 @@ class ExampleUnitTest {
       java.util.Locale.setDefault(originalLocale)
     }
   }
+
+  @Test
+  fun csvExporter_escapeCsv_escapesCommasAndQuotesProperly() {
+    assertEquals("Normal", com.example.util.CsvExporter.escapeCsv("Normal"))
+    assertEquals("\"Team 1, Alpha\"", com.example.util.CsvExporter.escapeCsv("Team 1, Alpha"))
+    assertEquals("\"\"\"Winning\"\" Team\"", com.example.util.CsvExporter.escapeCsv("\"Winning\" Team"))
+    assertEquals("\"Line1\nLine2\"", com.example.util.CsvExporter.escapeCsv("Line1\nLine2"))
+  }
+
+  @Test
+  fun csvExporter_getDefaultFileName_generatesCleanCsvName() {
+    val sampleGame = com.example.data.GameEntity(
+        id = 42,
+        team1Name = "تیم سپهر",
+        team2Name = "تیم آرش",
+        team1Player1Name = "سپهر",
+        team1Player2Name = "علی",
+        team2Player1Name = "آرش",
+        team2Player2Name = "رضا",
+        targetScore = 1165,
+        createdAt = 1700000000000L
+    )
+
+    val fileName = com.example.util.CsvExporter.getDefaultFileName(sampleGame)
+    org.junit.Assert.assertTrue(fileName.startsWith("shelem_"))
+    org.junit.Assert.assertTrue(fileName.endsWith(".csv"))
+    org.junit.Assert.assertTrue(fileName.contains("vs"))
+  }
+
+  @Test
+  fun csvExporter_generateCsv_outputsValidHeaderAndRowsWithBom() {
+    val sampleGame = com.example.data.GameEntity(
+        id = 1,
+        team1Name = "Eagles",
+        team2Name = "Lions",
+        team1Player1Name = "Alice",
+        team1Player2Name = "Bob",
+        team2Player1Name = "Charlie",
+        team2Player2Name = "Dave",
+        targetScore = 1165,
+        winHandOnlyOver1000 = true,
+        createdAt = 1700000000000L
+    )
+
+    val sampleRounds = listOf(
+        RoundEntity(
+            id = 1,
+            gameId = 1,
+            roundNumber = 1,
+            hakemTeam = 1,
+            hakemPlayerName = "Alice",
+            dealerPlayerName = "Dave",
+            bidAmount = 110,
+            team1CollectedRaw = 120,
+            team2CollectedRaw = 45,
+            team1FinalScore = 120,
+            team2FinalScore = 45,
+            status = "BidAccomplished",
+            isCompleted = true
+        ),
+        RoundEntity(
+            id = 2,
+            gameId = 1,
+            roundNumber = 2,
+            hakemTeam = 2,
+            hakemPlayerName = "Charlie",
+            dealerPlayerName = "Alice",
+            bidAmount = 165,
+            team1CollectedRaw = 0,
+            team2CollectedRaw = 165,
+            team1FinalScore = 0,
+            team2FinalScore = 330,
+            status = "Shelem",
+            isCompleted = true
+        )
+    )
+
+    val dummyStrings = object : com.example.util.CsvStringProvider {
+        override fun getString(resId: Int): String = "STR_$resId"
+        override fun getString(resId: Int, vararg formatArgs: Any): String = "STR_${resId}_${formatArgs.joinToString("_")}"
+    }
+
+    val csv = com.example.util.CsvExporter.generateCsv(sampleGame, sampleRounds, dummyStrings)
+
+    // UTF-8 BOM must be the first character
+    org.junit.Assert.assertTrue("CSV must start with UTF-8 BOM", csv.startsWith("\uFEFF"))
+
+    // Contains game metadata
+    org.junit.Assert.assertTrue(csv.contains("Eagles"))
+    org.junit.Assert.assertTrue(csv.contains("Lions"))
+    org.junit.Assert.assertTrue(csv.contains("Alice - Bob"))
+    org.junit.Assert.assertTrue(csv.contains("Charlie - Dave"))
+
+    // Contains round data
+    org.junit.Assert.assertTrue(csv.contains("110"))
+    org.junit.Assert.assertTrue(csv.contains("165"))
+    org.junit.Assert.assertTrue(csv.contains("120"))
+    org.junit.Assert.assertTrue(csv.contains("330"))
+  }
 }
 
