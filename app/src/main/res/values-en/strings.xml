@@ -19,6 +19,7 @@
     <string name="player_2_hint">Player 2</string>
 
     <string name="target_score">Target Score</string>
+    <string name="target_score_explanation">Reach target score or achieve a lead difference equal to it</string>
     <string name="target_score_hint">e.g. 1165 or 1200</string>
     <string name="target_score_label">Target: %1$s pts</string>
     <string name="target_score_card">Target: %1$s pts</string>

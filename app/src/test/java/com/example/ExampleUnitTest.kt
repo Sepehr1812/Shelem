@@ -357,5 +357,101 @@ class ExampleUnitTest {
     org.junit.Assert.assertTrue(csv.contains("120"))
     org.junit.Assert.assertTrue(csv.contains("330"))
   }
+
+  @Test
+  fun gameFinishCondition_reachedTargetScore() {
+    val targetScore = 1165
+    val team1Score = 1170
+    val team2Score = 500
+    val scoreDiff = kotlin.math.abs(team1Score - team2Score)
+
+    val isFinished = team1Score >= targetScore || team2Score >= targetScore || scoreDiff >= targetScore
+    org.junit.Assert.assertTrue("Game must be finished when Team 1 reaches target score", isFinished)
+
+    val winner = when {
+      team1Score >= targetScore || (team1Score - team2Score >= targetScore) || (isFinished && team1Score > team2Score) -> "Team 1"
+      team2Score >= targetScore || (team2Score - team1Score >= targetScore) || (isFinished && team2Score > team1Score) -> "Team 2"
+      else -> null
+    }
+    assertEquals("Team 1", winner)
+  }
+
+  @Test
+  fun gameFinishCondition_reachedLeadDifference() {
+    val targetScore = 1165
+    // Neither team reached 1165, but Team 1 leads by 1200 points (700 vs -500)
+    val team1Score = 700
+    val team2Score = -500
+    val scoreDiff = kotlin.math.abs(team1Score - team2Score)
+    assertEquals(1200, scoreDiff)
+
+    val isFinished = team1Score >= targetScore || team2Score >= targetScore || scoreDiff >= targetScore
+    org.junit.Assert.assertTrue("Game must be finished when score difference reaches target score", isFinished)
+
+    val winner = when {
+      team1Score >= targetScore || (team1Score - team2Score >= targetScore) || (isFinished && team1Score > team2Score) -> "Team 1"
+      team2Score >= targetScore || (team2Score - team1Score >= targetScore) || (isFinished && team2Score > team1Score) -> "Team 2"
+      else -> null
+    }
+    assertEquals("Team 1", winner)
+  }
+
+  @Test
+  fun gameFinishCondition_team2WinsByLeadDifference() {
+    val targetScore = 625
+    // Team 1 is at -250, Team 2 is at 400. Difference is 650 >= 625
+    val team1Score = -250
+    val team2Score = 400
+    val scoreDiff = kotlin.math.abs(team1Score - team2Score)
+    assertEquals(650, scoreDiff)
+
+    val isFinished = team1Score >= targetScore || team2Score >= targetScore || scoreDiff >= targetScore
+    org.junit.Assert.assertTrue("Game must be finished when Team 2 lead difference reaches target score", isFinished)
+
+    val winner = when {
+      team1Score >= targetScore || (team1Score - team2Score >= targetScore) || (isFinished && team1Score > team2Score) -> "Team 1"
+      team2Score >= targetScore || (team2Score - team1Score >= targetScore) || (isFinished && team2Score > team1Score) -> "Team 2"
+      else -> null
+    }
+    assertEquals("Team 2", winner)
+  }
+
+  @Test
+  fun csvExport_winnerByLeadDifference() {
+    val sampleGame = com.example.data.GameEntity(
+        id = 1,
+        team1Name = "Alpha",
+        team2Name = "Beta",
+        team1Player1Name = "A1",
+        team1Player2Name = "A2",
+        team2Player1Name = "B1",
+        team2Player2Name = "B2",
+        targetScore = 1165,
+        isFinished = false
+    )
+    val sampleRounds = listOf(
+        RoundEntity(
+            id = 1,
+            gameId = 1,
+            roundNumber = 1,
+            hakemTeam = 1,
+            hakemPlayerName = "A1",
+            dealerPlayerName = "B1",
+            bidAmount = 165,
+            team1FinalScore = 650,
+            team2FinalScore = -550,
+            status = "Shelem",
+            isCompleted = true
+        )
+    )
+    val dummyStrings = object : com.example.util.CsvStringProvider {
+        override fun getString(resId: Int): String = "STR_$resId"
+        override fun getString(resId: Int, vararg formatArgs: Any): String = "STR_${resId}_${formatArgs.joinToString("_")}"
+    }
+
+    val csv = com.example.util.CsvExporter.generateCsv(sampleGame, sampleRounds, dummyStrings)
+    // Team 1 has 650, Team 2 has -550 -> diff = 1200 >= 1165 -> Alpha wins!
+    org.junit.Assert.assertTrue("CSV should contain winner Alpha due to lead difference", csv.contains("Alpha"))
+  }
 }
 

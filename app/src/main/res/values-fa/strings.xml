@@ -19,6 +19,7 @@
     <string name="player_2_hint">بازیکن دوم</string>
 
     <string name="target_score">امتیاز هدف</string>
+    <string name="target_score_explanation">رسیدن به سقف امتیاز یا ایجاد اختلاف امتیاز برابر با آن</string>
     <string name="target_score_hint">مثلاً ۱۱۶۵ یا ۱200</string>
     <string name="target_score_label">هدف: %1$s امتیاز</string>
     <string name="target_score_card">هدف: %1$s امتیاز</string>

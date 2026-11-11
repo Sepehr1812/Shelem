@@ -63,14 +63,20 @@ object CsvExporter {
             .sortedBy { it.roundNumber }
         val totalT1Score = completedRounds.sumOf { it.team1FinalScore }
         val totalT2Score = completedRounds.sumOf { it.team2FinalScore }
+        val scoreDiff = kotlin.math.abs(totalT1Score - totalT2Score)
+
+        val isGameDone = game.isFinished ||
+            totalT1Score >= game.targetScore ||
+            totalT2Score >= game.targetScore ||
+            scoreDiff >= game.targetScore
 
         val winnerName = when {
-            totalT1Score >= game.targetScore || (game.isFinished && totalT1Score > totalT2Score) -> game.team1Name
-            totalT2Score >= game.targetScore || (game.isFinished && totalT2Score > totalT1Score) -> game.team2Name
+            totalT1Score >= game.targetScore || (totalT1Score - totalT2Score >= game.targetScore) || (isGameDone && totalT1Score > totalT2Score) -> game.team1Name
+            totalT2Score >= game.targetScore || (totalT2Score - totalT1Score >= game.targetScore) || (isGameDone && totalT2Score > totalT1Score) -> game.team2Name
             else -> "-"
         }
 
-        val gameStatus = if (game.isFinished) {
+        val gameStatus = if (isGameDone) {
             strings.getString(R.string.csv_status_finished)
         } else {
             strings.getString(R.string.csv_status_ongoing)

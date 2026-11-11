@@ -112,7 +112,8 @@ class ShelemRepository(private val dao: ShelemDao) {
         if (game != null) {
             val totalTeam1 = allRounds.filter { it.isCompleted }.sumOf { it.team1FinalScore }
             val totalTeam2 = allRounds.filter { it.isCompleted }.sumOf { it.team2FinalScore }
-            if (totalTeam1 >= game.targetScore || totalTeam2 >= game.targetScore) {
+            val scoreDiff = kotlin.math.abs(totalTeam1 - totalTeam2)
+            if (totalTeam1 >= game.targetScore || totalTeam2 >= game.targetScore || scoreDiff >= game.targetScore) {
                 dao.updateGame(game.copy(isFinished = true))
             }
         }
@@ -171,7 +172,8 @@ class ShelemRepository(private val dao: ShelemDao) {
         if (game != null) {
             val totalTeam1 = allRounds.filter { it.isCompleted }.sumOf { it.team1FinalScore }
             val totalTeam2 = allRounds.filter { it.isCompleted }.sumOf { it.team2FinalScore }
-            if (totalTeam1 >= game.targetScore || totalTeam2 >= game.targetScore) {
+            val scoreDiff = kotlin.math.abs(totalTeam1 - totalTeam2)
+            if (totalTeam1 >= game.targetScore || totalTeam2 >= game.targetScore || scoreDiff >= game.targetScore) {
                 dao.updateGame(game.copy(isFinished = true))
             }
         }
@@ -187,7 +189,8 @@ class ShelemRepository(private val dao: ShelemDao) {
             val remainingRounds = dao.getRoundsForGameOnce(round.gameId)
             val totalTeam1 = remainingRounds.sumOf { it.team1FinalScore }
             val totalTeam2 = remainingRounds.sumOf { it.team2FinalScore }
-            if (totalTeam1 < game.targetScore && totalTeam2 < game.targetScore) {
+            val scoreDiff = kotlin.math.abs(totalTeam1 - totalTeam2)
+            if (totalTeam1 < game.targetScore && totalTeam2 < game.targetScore && scoreDiff < game.targetScore) {
                 dao.updateGame(game.copy(isFinished = false))
             }
         }

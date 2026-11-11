@@ -102,11 +102,16 @@ fun GameBoardScreen(
 
     val totalTeam1Score = completedRounds.sumOf { it.team1FinalScore }
     val totalTeam2Score = completedRounds.sumOf { it.team2FinalScore }
+    val scoreDiff = kotlin.math.abs(totalTeam1Score - totalTeam2Score)
 
-    val isFinished = game.isFinished || totalTeam1Score >= game.targetScore || totalTeam2Score >= game.targetScore
+    val isFinished = game.isFinished ||
+        totalTeam1Score >= game.targetScore ||
+        totalTeam2Score >= game.targetScore ||
+        scoreDiff >= game.targetScore
+
     val winnerName = when {
-        totalTeam1Score >= game.targetScore || (isFinished && totalTeam1Score > totalTeam2Score) -> game.team1Name
-        totalTeam2Score >= game.targetScore || (isFinished && totalTeam2Score > totalTeam1Score) -> game.team2Name
+        totalTeam1Score >= game.targetScore || (totalTeam1Score - totalTeam2Score >= game.targetScore) || (isFinished && totalTeam1Score > totalTeam2Score) -> game.team1Name
+        totalTeam2Score >= game.targetScore || (totalTeam2Score - totalTeam1Score >= game.targetScore) || (isFinished && totalTeam2Score > totalTeam1Score) -> game.team2Name
         else -> null
     }
 
@@ -647,9 +652,11 @@ private fun ScoreBoardHeader(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Progress towards Target Score
-            val progressTeam1 = (totalTeam1Score.coerceAtLeast(0).toFloat() / game.targetScore.toFloat()).coerceIn(0f, 1f)
-            val progressTeam2 = (totalTeam2Score.coerceAtLeast(0).toFloat() / game.targetScore.toFloat()).coerceIn(0f, 1f)
+            // Progress towards Target Score (either by reaching score or by lead margin)
+            val effectiveScoreTeam1 = maxOf(totalTeam1Score, totalTeam1Score - totalTeam2Score).coerceAtLeast(0)
+            val effectiveScoreTeam2 = maxOf(totalTeam2Score, totalTeam2Score - totalTeam1Score).coerceAtLeast(0)
+            val progressTeam1 = (effectiveScoreTeam1.toFloat() / game.targetScore.toFloat()).coerceIn(0f, 1f)
+            val progressTeam2 = (effectiveScoreTeam2.toFloat() / game.targetScore.toFloat()).coerceIn(0f, 1f)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
