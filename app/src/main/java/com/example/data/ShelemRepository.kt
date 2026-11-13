@@ -26,7 +26,8 @@ class ShelemRepository(private val dao: ShelemDao) {
         team2Player2: String,
         targetScore: Int,
         winHandOnlyOver1000: Boolean = true,
-        trackAceInGround: Boolean = false
+        trackAceInGround: Boolean = false,
+        initialDealerSeat: Int = 0
     ): Long {
         val t1Name = team1Name.ifBlank { "$team1Player1 - $team1Player2" }.ifBlank { "تیم ۱" }
         val t2Name = team2Name.ifBlank { "$team2Player1 - $team2Player2" }.ifBlank { "تیم ۲" }
@@ -40,7 +41,8 @@ class ShelemRepository(private val dao: ShelemDao) {
             team2Player2Name = team2Player2.ifBlank { "بازیکن ۴" },
             targetScore = targetScore,
             winHandOnlyOver1000 = winHandOnlyOver1000,
-            trackAceInGround = trackAceInGround
+            trackAceInGround = trackAceInGround,
+            initialDealerSeat = initialDealerSeat.coerceIn(0, 3)
         )
         return dao.insertGame(game)
     }

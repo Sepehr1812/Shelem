@@ -43,7 +43,7 @@
     <string name="ongoing_round_title">دست در حال بازی ♠️</string>
     <string name="completed_rounds_title">دست‌های قبلی 📋</string>
     <string name="status_ongoing">در حال اجرا ⏳</string>
-    <string name="select_hakem_player">انتخاب حاکم (تاج 👑)</string>
+    <string name="select_hakem_player">حاکم</string>
     <string name="select_dealer_player">انتخاب کارت‌پخش‌کن (دیلر 🃏)</string>
     <string name="bid_amount">تعهد حاکم (خوانده)</string>
     <string name="shelem_claim">ادعای شلم</string>
@@ -207,4 +207,31 @@
     <string name="csv_ace_yes">دارد</string>
     <string name="csv_ace_no">ندارد</string>
     <string name="csv_field_track_ace">ثبت وجود تک در زمین</string>
+
+    <!-- Three-Step Game Setup & Table Seating -->
+    <string name="setup_step_1_title">تیم‌ها و بازیکنان</string>
+    <string name="setup_step_2_title">چیدمان میز و دیلر</string>
+    <string name="setup_step_3_title">هدف و قوانین بازی</string>
+    <string name="setup_step_indicator">مرحله %1$s از ۳</string>
+    <string name="next_step_table">مرحله بعد: چیدمان میز و دیلر</string>
+    <string name="next_step_rules">مرحله بعد: تعیین هدف و قوانین</string>
+    <string name="table_seating_title">نمای بالای میز بازی</string>
+    <string name="table_seating_subtitle">نوبت پخش کارت به صورت پادساعتگرد (خلاف عقربه‌های ساعت) می‌چرخد</string>
+    <string name="you_scorer_badge">شما (ثبت‌کننده)</string>
+    <string name="you_short_label">شما</string>
+    <string name="teammate_label">هم‌تیمی شما</string>
+    <string name="right_opponent_label">حریف راست</string>
+    <string name="left_opponent_label">حریف چپ</string>
+    <string name="first_dealer_badge">🃏 دیلر اول</string>
+    <string name="tap_to_set_dealer">انتخاب دیلر</string>
+    <string name="swap_opponents_seats">جابه‌جایی جای حریفان</string>
+    <string name="select_first_dealer_title">تعیین اولین دیلر (پخش‌کننده کارت)</string>
+    <string name="select_first_dealer_desc">روی بازیکن مورد نظر در میز بالا یا از لیست زیر ضربه بزنید:</string>
+    <string name="current_round_dealer_title">پخش‌کننده کارت</string>
+    <string name="dealer_auto_ccw_subtitle">تعیین خودکار پادساعتگرد بر اساس چیدمان میز</string>
+    <string name="teams_and_players_section">نام تیم‌ها و بازیکنان</string>
+    <string name="player_you_hint">نام شما (پایین میز)</string>
+    <string name="player_teammate_hint">هم‌تیمی (روبه‌روی شما)</string>
+    <string name="player_right_hint">بازیکن سمت راست</string>
+    <string name="player_left_hint">بازیکن سمت چپ</string>
 </resources>

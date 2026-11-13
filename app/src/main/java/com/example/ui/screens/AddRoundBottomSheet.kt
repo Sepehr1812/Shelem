@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -66,33 +67,28 @@ fun AddRoundBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    // Standard table seating rotation: Team1 P1 -> Team2 P1 -> Team1 P2 -> Team2 P2
-    val players = listOf(
-        Pair(game.team1Player1Name, Team.TEAM_1),
-        Pair(game.team2Player1Name, Team.TEAM_2),
-        Pair(game.team1Player2Name, Team.TEAM_1),
-        Pair(game.team2Player2Name, Team.TEAM_2)
-    )
+    // Counter-clockwise table seating rotation:
+    // Seat 0 (Bottom / "شما"): Team1 P1
+    // Seat 1 (Right): Team2 P1
+    // Seat 2 (Top): Team1 P2
+    // Seat 3 (Left): Team2 P2
+    val players = remember(game) { game.getCounterClockwiseSeating() }
 
-    val defaultDealerIndex = remember(previousDealerName) {
-        if (previousDealerName != null) {
-            val prevIdx = players.indexOfFirst { it.first.equals(previousDealerName, ignoreCase = true) }
-            if (prevIdx != -1) {
-                (prevIdx + 1) % players.size
-            } else {
-                0
-            }
-        } else {
-            0
-        }
+    // Dealer is automatically determined counter-clockwise based on table seating
+    val currentDealerPair = remember(game, previousDealerName) {
+        game.getCurrentDealer(previousDealerName)
+    }
+    val currentDealerPlayer = currentDealerPair.first
+    val currentDealerTeamLabel = if (currentDealerPair.second == Team.TEAM_1) {
+        game.team1Name
+    } else {
+        game.team2Name
     }
 
     var selectedHakemIndex by remember { mutableIntStateOf(0) }
-    var selectedDealerIndex by remember(defaultDealerIndex) { mutableIntStateOf(defaultDealerIndex) }
 
     val selectedHakemPlayer = players[selectedHakemIndex].first
     val selectedHakemTeam = players[selectedHakemIndex].second
-    val selectedDealerPlayer = players[selectedDealerIndex].first
 
     var isShelemClaim by remember { mutableStateOf(false) }
     var isNaras by remember { mutableStateOf(false) }
@@ -121,209 +117,220 @@ fun AddRoundBottomSheet(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.add_new_round),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            // HAKEM SELECTION
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
+                // Header
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = "👑 ${stringResource(R.string.select_hakem_player)}",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = stringResource(R.string.add_new_round),
+                        style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = GoldAccent
+                        color = MaterialTheme.colorScheme.primary
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        players.forEachIndexed { index, (name, team) ->
-                            val teamLabel = if (team == Team.TEAM_1) game.team1Name else game.team2Name
-                            FilterChip(
-                                selected = selectedHakemIndex == index,
-                                onClick = { selectedHakemIndex = index },
-                                label = { Text("$name ($teamLabel)") },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = GoldAccent,
-                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
-                                ),
-                                modifier = Modifier.testTag("hakem_chip_$index")
-                            )
-                        }
-                    }
                 }
-            }
 
-            // DEALER SELECTION
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text(
-                        text = "🃏 ${stringResource(R.string.select_dealer_player)}",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        players.forEachIndexed { index, (name, team) ->
-                            val teamLabel = if (team == Team.TEAM_1) game.team1Name else game.team2Name
-                            FilterChip(
-                                selected = selectedDealerIndex == index,
-                                onClick = { selectedDealerIndex = index },
-                                label = { Text("$name ($teamLabel)") },
-                                modifier = Modifier.testTag("dealer_chip_$index")
-                            )
-                        }
-                    }
-                }
-            }
-
-            // BID AMOUNT SELECTION
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
+                // DEALER READ-ONLY DISPLAY (Auto-assigned counter-clockwise)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("dealer_display_card"),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 14.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = stringResource(R.string.bid_amount),
+                            text = "🃏 ${stringResource(R.string.current_round_dealer_title)}",
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
-                        Text(
-                            text = if (isShelemClaim) stringResource(R.string.shelem_165) else bidAmount.toPersianDigits(),
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = stringResource(R.string.shelem_claim), style = MaterialTheme.typography.bodyMedium)
-                        Switch(
-                            checked = isShelemClaim,
-                            onCheckedChange = {
-                                isShelemClaim = it
-                                if (!it) isNaras = false
-                            },
-                            modifier = Modifier.testTag("shelem_claim_switch")
-                        )
-                    }
-
-                    AnimatedVisibility(visible = isShelemClaim) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.testTag("dealer_readonly_badge")
+                        ) {
+                            Text(
+                                text = currentDealerPlayer,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "($currentDealerTeamLabel)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+
+                // HAKEM SELECTION
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = "👑 ${stringResource(R.string.select_hakem_player)}",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = GoldAccent
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            players.forEachIndexed { index, (name, team) ->
+                                val teamLabel = if (team == Team.TEAM_1) game.team1Name else game.team2Name
+                                FilterChip(
+                                    selected = selectedHakemIndex == index,
+                                    onClick = { selectedHakemIndex = index },
+                                    label = { Text("$name ($teamLabel)") },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = GoldAccent,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                                    ),
+                                    modifier = Modifier.testTag("hakem_chip_$index")
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // BID AMOUNT SELECTION
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Column(modifier = Modifier.padding(14.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = stringResource(R.string.shelem_naras), style = MaterialTheme.typography.bodyMedium)
-                            Switch(
-                                checked = isNaras,
-                                onCheckedChange = { isNaras = it },
-                                modifier = Modifier.testTag("shelem_naras_switch")
+                            Text(
+                                text = stringResource(R.string.bid_amount),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = if (isShelemClaim) stringResource(R.string.shelem_165) else bidAmount.toPersianDigits(),
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
-                    }
 
-                    if (!isShelemClaim) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            quickBidPresets.forEach { preset ->
-                                FilterChip(
-                                    selected = bidAmount == preset,
-                                    onClick = { bidAmountFloat = preset.toFloat() },
-                                    label = { Text(preset.toPersianDigits()) },
-                                    modifier = Modifier.testTag("bid_chip_$preset")
+                            Text(text = stringResource(R.string.shelem_claim), style = MaterialTheme.typography.bodyMedium)
+                            Switch(
+                                checked = isShelemClaim,
+                                onCheckedChange = {
+                                    isShelemClaim = it
+                                    if (!it) isNaras = false
+                                },
+                                modifier = Modifier.testTag("shelem_claim_switch")
+                            )
+                        }
+
+                        AnimatedVisibility(visible = isShelemClaim) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(text = stringResource(R.string.shelem_naras), style = MaterialTheme.typography.bodyMedium)
+                                Switch(
+                                    checked = isNaras,
+                                    onCheckedChange = { isNaras = it },
+                                    modifier = Modifier.testTag("shelem_naras_switch")
                                 )
                             }
                         }
 
-                        Slider(
-                            value = bidAmountFloat,
-                            onValueChange = { bidAmountFloat = it },
-                            valueRange = 100f..165f,
-                            steps = 12,
-                            modifier = Modifier.testTag("bid_slider")
+                        if (!isShelemClaim) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                quickBidPresets.forEach { preset ->
+                                    FilterChip(
+                                        selected = bidAmount == preset,
+                                        onClick = { bidAmountFloat = preset.toFloat() },
+                                        label = { Text(preset.toPersianDigits()) },
+                                        modifier = Modifier.testTag("bid_chip_$preset")
+                                    )
+                                }
+                            }
+
+                            Slider(
+                                value = bidAmountFloat,
+                                onValueChange = { bidAmountFloat = it },
+                                valueRange = 100f..165f,
+                                steps = 12,
+                                modifier = Modifier.testTag("bid_slider")
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 8.dp
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp, vertical = 12.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            onConfirmBid(
+                                selectedHakemTeam,
+                                selectedHakemPlayer,
+                                currentDealerPlayer,
+                                bidAmount,
+                                isNaras
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp)
+                            .testTag("start_round_button"),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(R.string.start_round_with_bid),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 8.dp
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 12.dp)
-            ) {
-                Button(
-                    onClick = {
-                        onConfirmBid(
-                            selectedHakemTeam,
-                            selectedHakemPlayer,
-                            selectedDealerPlayer,
-                            bidAmount,
-                            isNaras
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(54.dp)
-                        .testTag("start_round_button"),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
-                ) {
-                    Text(
-                        text = stringResource(R.string.start_round_with_bid),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
         }
     }
-}
 }

@@ -43,7 +43,7 @@
     <string name="ongoing_round_title">Ongoing Round ♠️</string>
     <string name="completed_rounds_title">Completed Rounds 📋</string>
     <string name="status_ongoing">In Progress ⏳</string>
-    <string name="select_hakem_player">Select Hakem / Bidder (👑)</string>
+    <string name="select_hakem_player">Hakem</string>
     <string name="select_dealer_player">Select Dealer (🃏)</string>
     <string name="bid_amount">Hakem Bid</string>
     <string name="shelem_claim">Shelem Claim (165)</string>
@@ -207,4 +207,31 @@
     <string name="csv_ace_yes">Yes</string>
     <string name="csv_ace_no">No</string>
     <string name="csv_field_track_ace">Track Ace in Ground</string>
+
+    <!-- Three-Step Game Setup & Table Seating -->
+    <string name="setup_step_1_title">Teams &amp; Players</string>
+    <string name="setup_step_2_title">Table &amp; First Dealer</string>
+    <string name="setup_step_3_title">Target &amp; Rules</string>
+    <string name="setup_step_indicator">Step %1$s of 3</string>
+    <string name="next_step_table">Next: Table &amp; First Dealer</string>
+    <string name="next_step_rules">Next: Target &amp; Rules</string>
+    <string name="table_seating_title">Overhead Table View</string>
+    <string name="table_seating_subtitle">Dealer turn rotates counter-clockwise around the table</string>
+    <string name="you_scorer_badge">You (Scorer)</string>
+    <string name="you_short_label">شما</string>
+    <string name="teammate_label">Teammate</string>
+    <string name="right_opponent_label">Right Opponent</string>
+    <string name="left_opponent_label">Left Opponent</string>
+    <string name="first_dealer_badge">🃏 First Dealer</string>
+    <string name="tap_to_set_dealer">Set Dealer</string>
+    <string name="swap_opponents_seats">Swap Opponent Seats</string>
+    <string name="select_first_dealer_title">Select Initial Dealer</string>
+    <string name="select_first_dealer_desc">Tap a player on the table above or choose below:</string>
+    <string name="current_round_dealer_title">Card Dealer</string>
+    <string name="dealer_auto_ccw_subtitle">Auto-assigned counter-clockwise by table seating</string>
+    <string name="teams_and_players_section">Teams &amp; Players</string>
+    <string name="player_you_hint">Your Name (Bottom Seat)</string>
+    <string name="player_teammate_hint">Teammate (Opposite Seat)</string>
+    <string name="player_right_hint">Right Seat Player</string>
+    <string name="player_left_hint">Left Seat Player</string>
 </resources>

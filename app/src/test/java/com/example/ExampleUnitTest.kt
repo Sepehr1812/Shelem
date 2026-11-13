@@ -72,32 +72,34 @@ class ExampleUnitTest {
   }
 
   @Test
-  fun dealerRotation_clockwiseOrderAroundTable() {
-    val playerSeating = listOf("Ali", "Reza", "Hassan", "Mehdi")
+  fun dealerRotation_counterClockwiseOrderAroundTable() {
+    val game = com.example.data.GameEntity(
+      team1Name = "ما",
+      team2Name = "آن‌ها",
+      team1Player1Name = "سپهر", // Seat 0 (Bottom - شما)
+      team1Player2Name = "علی",  // Seat 2 (Top - روبه‌رو)
+      team2Player1Name = "آرش",  // Seat 1 (Right - راست)
+      team2Player2Name = "رضا",  // Seat 3 (Left - چپ)
+      initialDealerSeat = 1      // آرش starts as first dealer
+    )
 
-    // If previous round dealer was Ali (index 0), next dealer should be Reza (index 1)
-    val prevDealer1 = "Ali"
-    val idx1 = playerSeating.indexOfFirst { it.equals(prevDealer1, ignoreCase = true) }
-    val nextDealer1 = playerSeating[(idx1 + 1) % playerSeating.size]
-    assertEquals("Reza", nextDealer1)
+    val seating = game.getCounterClockwiseSeating().map { it.first }
+    assertEquals(listOf("سپهر", "آرش", "علی", "رضا"), seating)
 
-    // If previous round dealer was Reza (index 1), next dealer should be Hassan (index 2)
-    val prevDealer2 = "Reza"
-    val idx2 = playerSeating.indexOfFirst { it.equals(prevDealer2, ignoreCase = true) }
-    val nextDealer2 = playerSeating[(idx2 + 1) % playerSeating.size]
-    assertEquals("Hassan", nextDealer2)
+    // Round 1 (no previous dealer): should return initialDealerSeat = 1 ("آرش")
+    assertEquals("آرش", game.getCurrentDealer(null).first)
 
-    // If previous round dealer was Hassan (index 2), next dealer should be Mehdi (index 3)
-    val prevDealer3 = "Hassan"
-    val idx3 = playerSeating.indexOfFirst { it.equals(prevDealer3, ignoreCase = true) }
-    val nextDealer3 = playerSeating[(idx3 + 1) % playerSeating.size]
-    assertEquals("Mehdi", nextDealer3)
+    // Round 2 (previous was آرش): counter-clockwise next is علی (Seat 2)
+    assertEquals("علی", game.getCurrentDealer("آرش").first)
 
-    // If previous round dealer was Mehdi (index 3), next dealer rotates back to Ali (index 0)
-    val prevDealer4 = "Mehdi"
-    val idx4 = playerSeating.indexOfFirst { it.equals(prevDealer4, ignoreCase = true) }
-    val nextDealer4 = playerSeating[(idx4 + 1) % playerSeating.size]
-    assertEquals("Ali", nextDealer4)
+    // Round 3 (previous was علی): counter-clockwise next is رضا (Seat 3)
+    assertEquals("رضا", game.getCurrentDealer("علی").first)
+
+    // Round 4 (previous was رضا): counter-clockwise next wraps to سپهر (Seat 0)
+    assertEquals("سپهر", game.getCurrentDealer("رضا").first)
+
+    // Round 5 (previous was سپهر): counter-clockwise next is آرش (Seat 1)
+    assertEquals("آرش", game.getCurrentDealer("سپهر").first)
   }
 
   @Test

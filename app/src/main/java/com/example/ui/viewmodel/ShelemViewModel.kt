@@ -111,6 +111,7 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
         targetScore: Int,
         winHandOnlyOver1000: Boolean = true,
         trackAceInGround: Boolean = false,
+        initialDealerSeat: Int = 0,
         onCreated: (Long) -> Unit
     ) {
         viewModelScope.launch {
@@ -123,7 +124,8 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
                 team2Player2 = team2Player2,
                 targetScore = targetScore,
                 winHandOnlyOver1000 = winHandOnlyOver1000,
-                trackAceInGround = trackAceInGround
+                trackAceInGround = trackAceInGround,
+                initialDealerSeat = initialDealerSeat
             )
             _activeGameId.value = newGameId
             onCreated(newGameId)
