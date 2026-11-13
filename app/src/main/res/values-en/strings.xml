@@ -57,7 +57,7 @@
     <string name="status_bid_accomplished">Bid Made (Accomplished)</string>
     <string name="status_bid_failed">Bid Failed (Set)</string>
     <string name="status_shelem_card">Shelem (+330) 🎉</string>
-    <string name="status_negative_shelem_card">Double Negative 💥</string>
+    <string name="status_negative_shelem_card">Double Negative ❌</string>
 
     <string name="round_number">Round %1$s</string>
     <string name="round_delete_confirm">Delete Round %1$s?</string>
@@ -93,9 +93,9 @@
     <string name="continue_scoring">Continue Scoring</string>
     <string name="naras_badge">Naras</string>
     <string name="round_info_title">Round %1$s Details</string>
-    <string name="hakem_prefix">👑 Hakem: </string>
-    <string name="dealer_prefix">🃏 Dealer: </string>
-    <string name="bid_prefix">Bid: </string>
+    <string name="hakem_prefix">👑</string>
+    <string name="dealer_prefix">🃏</string>
+    <string name="bid_prefix">"Bid: "</string>
     <string name="hakem_label_with_name">👑 Hakem: %1$s (%2$s)</string>
     <string name="bid_label_with_value">Bid: %1$s</string>
     <string name="dealer_label_with_name">🃏 Dealer: %1$s</string>

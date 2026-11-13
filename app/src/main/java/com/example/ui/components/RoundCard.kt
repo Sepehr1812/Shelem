@@ -45,7 +45,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.R
@@ -233,6 +235,7 @@ fun RoundCard(
                         style = MaterialTheme.typography.bodyMedium,
                         color = GoldAccent
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = round.hakemPlayerName,
                         style = MaterialTheme.typography.bodyMedium,
@@ -246,6 +249,7 @@ fun RoundCard(
                         text = stringResource(R.string.dealer_prefix),
                         style = MaterialTheme.typography.bodyMedium
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = round.dealerPlayerName,
                         style = MaterialTheme.typography.bodyMedium,
@@ -254,19 +258,26 @@ fun RoundCard(
                     )
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stringResource(R.string.bid_prefix),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = round.bidAmount.toPersianDigits(),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(
+                            MaterialTheme.typography.bodyMedium.toSpanStyle().copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        ) {
+                            append(stringResource(R.string.bid_prefix).trimEnd())
+                            append(" ")
+                        }
+                        withStyle(
+                            MaterialTheme.typography.bodyLarge.toSpanStyle().copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        ) {
+                            append(round.bidAmount.toPersianDigits())
+                        }
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
