@@ -110,6 +110,7 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
         team2Player2: String,
         targetScore: Int,
         winHandOnlyOver1000: Boolean = true,
+        trackAceInGround: Boolean = false,
         onCreated: (Long) -> Unit
     ) {
         viewModelScope.launch {
@@ -121,7 +122,8 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
                 team2Player1 = team2Player1,
                 team2Player2 = team2Player2,
                 targetScore = targetScore,
-                winHandOnlyOver1000 = winHandOnlyOver1000
+                winHandOnlyOver1000 = winHandOnlyOver1000,
+                trackAceInGround = trackAceInGround
             )
             _activeGameId.value = newGameId
             onCreated(newGameId)
@@ -155,10 +157,11 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
     fun completeRound(
         round: RoundEntity,
         hakemCollectedPoints: Int,
+        hasAceInGround: Boolean = false,
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
-            repository.completeRound(round, hakemCollectedPoints)
+            repository.completeRound(round, hakemCollectedPoints, hasAceInGround)
             onSuccess()
         }
     }
@@ -170,6 +173,7 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
         bidAmount: Int,
         isNaras: Boolean,
         hakemCollectedPoints: Int,
+        hasAceInGround: Boolean = false,
         onSuccess: () -> Unit
     ) {
         val gameId = _activeGameId.value ?: return
@@ -183,7 +187,8 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
                 dealerPlayerName = dealerPlayerName,
                 bidAmount = bidAmount,
                 isNaras = isNaras,
-                hakemCollectedPoints = hakemCollectedPoints
+                hakemCollectedPoints = hakemCollectedPoints,
+                hasAceInGround = hasAceInGround
             )
             onSuccess()
         }

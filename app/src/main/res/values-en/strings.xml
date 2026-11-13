@@ -182,4 +182,29 @@
     <string name="csv_claim_normal">Normal</string>
     <string name="csv_claim_shelem">Shelem</string>
     <string name="csv_claim_naras">Shelem Naras</string>
+
+    <!-- Ace in Ground Feature -->
+    <string name="track_ace_in_ground_title">Track Ace in Kitty / Ground</string>
+    <string name="track_ace_in_ground_desc">Option to record whether an Ace was present in the ground cards</string>
+    <string name="track_ace_in_ground_short_badge">Ace in Ground</string>
+    <string name="track_ace_in_ground_section_title">Ace in Ground Tracking</string>
+    <string name="has_ace_in_ground_question">Was there an Ace in the ground?</string>
+    <string name="has_ace_in_ground_desc">Record whether an Ace card was found in the ground (kitty) this round</string>
+    <string name="ace_in_ground_badge">♠️</string>
+    <string name="ace_statistics_title">Ace in Ground Statistics</string>
+    <string name="ace_statistics_desc">Count, proportion, and team outcomes for hands with an Ace in ground</string>
+    <string name="ace_rounds_count_format">%1$s of %2$s rounds (%3$s%%)</string>
+    <string name="ace_rounds_from_total_format">of %1$s rounds (%2$s%%)</string>
+    <string name="ace_rounds_total_label">Rounds with Ace</string>
+    <string name="ace_rounds_ratio_label">Proportion of Total</string>
+    <string name="ace_hakem_win_rate_title">Hakem Win Rate in Ace Hands</string>
+    <string name="ace_hakem_wins_fraction">%1$s of %2$s rounds</string>
+    <string name="ace_team_performance_title">Team Performance in Ace Rounds</string>
+    <string name="ace_team_wins_format">%1$s Wins: %2$s rounds (%3$s%%)</string>
+    <string name="ace_no_rounds_recorded">No rounds with an Ace in ground recorded in this match yet.</string>
+    <string name="ace_hakem_success_rate">Hakem Success in Ace Rounds: %1$s%%</string>
+    <string name="csv_header_ace_in_ground">Ace in Ground</string>
+    <string name="csv_ace_yes">Yes</string>
+    <string name="csv_ace_no">No</string>
+    <string name="csv_field_track_ace">Track Ace in Ground</string>
 </resources>

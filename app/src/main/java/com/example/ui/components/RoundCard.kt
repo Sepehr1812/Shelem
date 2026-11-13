@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -179,6 +180,25 @@ fun RoundCard(
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onErrorContainer,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+
+                    if (round.hasAceInGround) {
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Surface(
+                            color = GoldAccent.copy(alpha = 0.14f),
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.35f)),
+                            modifier = Modifier.testTag("ace_badge_${round.id}")
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_spade),
+                                contentDescription = stringResource(R.string.track_ace_in_ground_short_badge),
+                                tint = GoldAccent,
+                                modifier = Modifier
+                                    .padding(horizontal = 6.dp, vertical = 4.dp)
+                                    .size(14.dp)
                             )
                         }
                     }

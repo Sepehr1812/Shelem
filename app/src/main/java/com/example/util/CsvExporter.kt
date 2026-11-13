@@ -88,6 +88,12 @@ object CsvExporter {
             strings.getString(R.string.csv_field_inactive)
         }
 
+        val trackAceText = if (game.trackAceInGround) {
+            strings.getString(R.string.csv_field_active)
+        } else {
+            strings.getString(R.string.csv_field_inactive)
+        }
+
         val formattedDate = try {
             SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US).format(Date(game.createdAt))
         } catch (_: Exception) {
@@ -100,6 +106,7 @@ object CsvExporter {
         sb.append(escapeCsv(strings.getString(R.string.csv_field_date))).append(",").append(escapeCsv(formattedDate)).append("\n")
         sb.append(escapeCsv(strings.getString(R.string.csv_field_target_score))).append(",").append(escapeCsv(game.targetScore)).append("\n")
         sb.append(escapeCsv(strings.getString(R.string.csv_field_rule_1000))).append(",").append(escapeCsv(rule1000Text)).append("\n")
+        sb.append(escapeCsv(strings.getString(R.string.csv_field_track_ace))).append(",").append(escapeCsv(trackAceText)).append("\n")
         sb.append(escapeCsv(strings.getString(R.string.csv_field_status))).append(",").append(escapeCsv(gameStatus)).append("\n")
         sb.append(escapeCsv(strings.getString(R.string.csv_field_winner))).append(",").append(escapeCsv(winnerName)).append("\n")
         sb.append("\n")
@@ -117,7 +124,7 @@ object CsvExporter {
         sb.append("\n")
 
         // --- SECTION 2: ROUND-BY-ROUND BREAKDOWN TABLE ---
-        val headers = listOf(
+        val headers = mutableListOf(
             strings.getString(R.string.csv_header_round),
             strings.getString(R.string.csv_header_hakem_team),
             strings.getString(R.string.csv_header_hakem_player),
@@ -132,6 +139,9 @@ object CsvExporter {
             strings.getString(R.string.csv_header_t2_total, game.team2Name),
             strings.getString(R.string.csv_header_result)
         )
+        if (game.trackAceInGround) {
+            headers.add(strings.getString(R.string.csv_header_ace_in_ground))
+        }
         sb.append(headers.joinToString(",") { escapeCsv(it) }).append("\n")
 
         var cumT1 = 0
@@ -156,7 +166,7 @@ object CsvExporter {
                 else -> round.status
             }
 
-            val row = listOf(
+            val row = mutableListOf<Any>(
                 round.roundNumber,
                 hakemTeamName,
                 round.hakemPlayerName,
@@ -171,6 +181,11 @@ object CsvExporter {
                 cumT2,
                 statusLabel
             )
+            if (game.trackAceInGround) {
+                row.add(
+                    if (round.hasAceInGround) strings.getString(R.string.csv_ace_yes) else strings.getString(R.string.csv_ace_no)
+                )
+            }
 
             sb.append(row.joinToString(",") { escapeCsv(it) }).append("\n")
         }

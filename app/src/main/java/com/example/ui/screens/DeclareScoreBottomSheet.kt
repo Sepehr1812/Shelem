@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -25,11 +26,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -59,13 +62,14 @@ fun DeclareScoreBottomSheet(
     team1PriorScore: Int = 0,
     team2PriorScore: Int = 0,
     onDismiss: () -> Unit,
-    onConfirmScore: (round: RoundEntity, hakemCollectedPoints: Int) -> Unit
+    onConfirmScore: (round: RoundEntity, hakemCollectedPoints: Int, hasAceInGround: Boolean) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var hakemPointsFloat by remember { mutableFloatStateOf(round.bidAmount.toFloat().coerceIn(0f, 165f)) }
     val hakemCollectedPoints = hakemPointsFloat.roundToInt()
     val opponentCollectedPoints = 165 - hakemCollectedPoints
+    var hasAceInGround by remember { mutableStateOf(round.hasAceInGround) }
 
     val quickPointsPresets = listOf(110, 115, 120, 125, 130, 135, 140, 145, 165)
 
@@ -310,6 +314,44 @@ fun DeclareScoreBottomSheet(
                 )
             }
 
+            if (game.trackAceInGround) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    ),
+                    shape = RoundedCornerShape(14.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(14.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.has_ace_in_ground_question),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = stringResource(R.string.has_ace_in_ground_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Switch(
+                            checked = hasAceInGround,
+                            onCheckedChange = { hasAceInGround = it },
+                            modifier = Modifier.testTag("ace_in_ground_switch")
+                        )
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
         }
 
@@ -325,7 +367,7 @@ fun DeclareScoreBottomSheet(
             ) {
                 Button(
                     onClick = {
-                        onConfirmScore(round, hakemCollectedPoints)
+                        onConfirmScore(round, hakemCollectedPoints, hasAceInGround)
                     },
                     modifier = Modifier
                         .fillMaxWidth()

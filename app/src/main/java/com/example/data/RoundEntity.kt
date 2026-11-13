@@ -32,5 +32,6 @@ data class RoundEntity(
     val team1FinalScore: Int = 0,
     val team2FinalScore: Int = 0,
     val status: String = "Ongoing", // "Ongoing", "Shelem", "NegativeShelem", "BidAccomplished", "BidFailed"
-    val isCompleted: Boolean = true
+    val isCompleted: Boolean = true,
+    val hasAceInGround: Boolean = false
 )

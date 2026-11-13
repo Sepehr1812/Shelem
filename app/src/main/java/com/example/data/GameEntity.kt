@@ -16,5 +16,6 @@ data class GameEntity(
     val targetScore: Int = 1165,
     val createdAt: Long = System.currentTimeMillis(),
     val isFinished: Boolean = false,
-    val winHandOnlyOver1000: Boolean = true
+    val winHandOnlyOver1000: Boolean = true,
+    val trackAceInGround: Boolean = false
 )

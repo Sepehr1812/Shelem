@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -35,7 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -124,6 +125,21 @@ fun GameStatisticsBottomSheet(
 
     val shelemsCount = completedRounds.count { it.status == "Shelem" || it.status == "NegativeShelem" }
     val narasCount = completedRounds.count { it.isNaras }
+
+    // 5. Ace in Ground Stats
+    val aceRounds = completedRounds.filter { it.hasAceInGround }
+    val aceRoundsCount = aceRounds.size
+    val aceRoundsRatio = if (totalCompletedRounds > 0) ((aceRoundsCount.toFloat() / totalCompletedRounds) * 100).roundToInt() else 0
+
+    val aceTeam1Wins = aceRounds.count { it.team1FinalScore > it.team2FinalScore }
+    val aceTeam2Wins = aceRounds.count { it.team2FinalScore > it.team1FinalScore }
+    val aceTiedRounds = aceRounds.count { it.team1FinalScore == it.team2FinalScore }
+
+    val aceTeam1WinRate = if (aceRoundsCount > 0) ((aceTeam1Wins.toFloat() / aceRoundsCount) * 100).roundToInt() else 0
+    val aceTeam2WinRate = if (aceRoundsCount > 0) ((aceTeam2Wins.toFloat() / aceRoundsCount) * 100).roundToInt() else 0
+
+    val aceHakemAccomplished = aceRounds.count { it.status == "BidAccomplished" || it.status == "Shelem" }
+    val aceHakemSuccessRate = if (aceRoundsCount > 0) ((aceHakemAccomplished.toFloat() / aceRoundsCount) * 100).roundToInt() else 0
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -325,25 +341,24 @@ fun GameStatisticsBottomSheet(
                                 if (team1Wins > 0) {
                                     Box(
                                         modifier = Modifier
-                                            .weight(if (t1Ratio > 0f) t1Ratio else 0.001f)
-                                            .fillMaxWidth()
+                                            .weight(team1Wins.toFloat())
+                                            .fillMaxHeight()
                                             .background(EmeraldGreen)
                                     )
                                 }
                                 if (tiedRounds > 0) {
-                                    val tieRatio = tiedRounds.toFloat() / totalCompletedRounds
                                     Box(
                                         modifier = Modifier
-                                            .weight(if (tieRatio > 0f) tieRatio else 0.001f)
-                                            .fillMaxWidth()
+                                            .weight(tiedRounds.toFloat())
+                                            .fillMaxHeight()
                                             .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                                     )
                                 }
                                 if (team2Wins > 0) {
                                     Box(
                                         modifier = Modifier
-                                            .weight(if (t2Ratio > 0f) t2Ratio else 0.001f)
-                                            .fillMaxWidth()
+                                            .weight(team2Wins.toFloat())
+                                            .fillMaxHeight()
                                             .background(GoldAccent)
                                     )
                                 }
@@ -583,29 +598,26 @@ fun GameStatisticsBottomSheet(
                         }
                     }
                 }
+
+                // Section 5: Ace in Ground Statistics
+                if (game.trackAceInGround || aceRoundsCount > 0) {
+                    AceInGroundStatisticsCard(
+                        game = game,
+                        totalCompletedRounds = totalCompletedRounds,
+                        aceRoundsCount = aceRoundsCount,
+                        aceRoundsRatio = aceRoundsRatio,
+                        aceTeam1Wins = aceTeam1Wins,
+                        aceTeam2Wins = aceTeam2Wins,
+                        aceTiedRounds = aceTiedRounds,
+                        aceTeam1WinRate = aceTeam1WinRate,
+                        aceTeam2WinRate = aceTeam2WinRate,
+                        aceHakemAccomplished = aceHakemAccomplished,
+                        aceHakemSuccessRate = aceHakemSuccessRate
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(4.dp))
-
-            OutlinedButton(
-                onClick = onExportCsv,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("statistics_export_csv_action_button"),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.FileDownload,
-                    contentDescription = null,
-                    tint = GoldAccent,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = stringResource(R.string.export_csv_title),
-                    fontWeight = FontWeight.Bold
-                )
-            }
 
             Button(
                 onClick = onDismiss,
@@ -759,3 +771,250 @@ private fun HakemPerformanceItem(
         }
     }
 }
+
+@Composable
+private fun AceInGroundStatisticsCard(
+    game: GameEntity,
+    totalCompletedRounds: Int,
+    aceRoundsCount: Int,
+    aceRoundsRatio: Int,
+    aceTeam1Wins: Int,
+    aceTeam2Wins: Int,
+    aceTiedRounds: Int,
+    aceTeam1WinRate: Int,
+    aceTeam2WinRate: Int,
+    aceHakemAccomplished: Int,
+    aceHakemSuccessRate: Int,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("stat_ace_card"),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Surface(
+                    color = GoldAccent.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_spade),
+                            contentDescription = null,
+                            tint = GoldAccent,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+                Column {
+                    Text(
+                        text = stringResource(R.string.ace_statistics_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = stringResource(R.string.ace_statistics_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            if (aceRoundsCount == 0) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.ace_no_rounds_recorded),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(14.dp),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            } else {
+                // KPIs for Ace in ground
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    // KPI 1: دست‌های دارای تک
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surface
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.ace_rounds_total_label),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = stringResource(R.string.rounds_count_format, aceRoundsCount.toPersianDigits()),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = GoldAccent
+                            )
+                            Text(
+                                text = stringResource(
+                                    R.string.ace_rounds_from_total_format,
+                                    totalCompletedRounds.toPersianDigits(),
+                                    aceRoundsRatio.toPersianDigits()
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    // KPI 2: برد حاکم در دست‌های تک‌دار
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surface
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = stringResource(R.string.ace_hakem_win_rate_title),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = "${aceHakemSuccessRate.toPersianDigits()}٪",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = GoldAccent
+                            )
+                            Text(
+                                text = stringResource(
+                                    R.string.ace_hakem_wins_fraction,
+                                    aceHakemAccomplished.toPersianDigits(),
+                                    aceRoundsCount.toPersianDigits()
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+
+                // Team Performance Distribution Bar
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = stringResource(R.string.ace_team_performance_title),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(14.dp)
+                            .clip(RoundedCornerShape(7.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                    ) {
+                        if (aceTeam1Wins > 0) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(aceTeam1Wins.toFloat())
+                                    .fillMaxHeight()
+                                    .background(EmeraldGreen)
+                            )
+                        }
+                        if (aceTiedRounds > 0) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(aceTiedRounds.toFloat())
+                                    .fillMaxHeight()
+                                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                            )
+                        }
+                        if (aceTeam2Wins > 0) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(aceTeam2Wins.toFloat())
+                                    .fillMaxHeight()
+                                    .background(GoldAccent)
+                            )
+                        }
+                    }
+
+                    // Team breakdown labels
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(EmeraldGreen, CircleShape)
+                            )
+                            Text(
+                                text = stringResource(
+                                    R.string.ace_team_wins_format,
+                                    game.team1Name,
+                                    aceTeam1Wins.toPersianDigits(),
+                                    aceTeam1WinRate.toPersianDigits()
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(8.dp)
+                                    .background(GoldAccent, CircleShape)
+                            )
+                            Text(
+                                text = stringResource(
+                                    R.string.ace_team_wins_format,
+                                    game.team2Name,
+                                    aceTeam2Wins.toPersianDigits(),
+                                    aceTeam2WinRate.toPersianDigits()
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

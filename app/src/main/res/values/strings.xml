@@ -182,4 +182,29 @@
     <string name="csv_claim_normal">عادی</string>
     <string name="csv_claim_shelem">شلم</string>
     <string name="csv_claim_naras">شلم نارس</string>
+
+    <!-- Ace in Ground Feature -->
+    <string name="track_ace_in_ground_title">فعالسازی ثبت وجود تک در زمین</string>
+    <string name="track_ace_in_ground_desc">امکان ثبت وجود کارت تک در برگ‌های زمین در هر دست</string>
+    <string name="track_ace_in_ground_short_badge">ثبت تک زمین</string>
+    <string name="track_ace_in_ground_section_title">ثبت وجود تک در زمین</string>
+    <string name="has_ace_in_ground_question">آیا زمین تک داشت؟</string>
+    <string name="has_ace_in_ground_desc">ثبت وجود برگ آس (تک) در برگ‌های زمین این دست</string>
+    <string name="ace_in_ground_badge">♠️</string>
+    <string name="ace_statistics_title">آمار دست‌های تک‌دار</string>
+    <string name="ace_statistics_desc">تعداد، نسبت و عملکرد تیم‌ها در دست‌هایی که زمین کارت تک داشته است</string>
+    <string name="ace_rounds_count_format">%1$s دست از %2$s دست (%3$s%%)</string>
+    <string name="ace_rounds_from_total_format">از %1$s دست (%2$s%%)</string>
+    <string name="ace_rounds_total_label">دست‌های دارای تک</string>
+    <string name="ace_rounds_ratio_label">نسبت به کل بازی</string>
+    <string name="ace_hakem_win_rate_title">برد حاکم در دست‌های تک‌دار</string>
+    <string name="ace_hakem_wins_fraction">%1$s دست از %2$s دست</string>
+    <string name="ace_team_performance_title">عملکرد تیم‌ها در دست‌های تک‌دار</string>
+    <string name="ace_team_wins_format">بردهای %1$s: %2$s دست (%3$s%%)</string>
+    <string name="ace_no_rounds_recorded">در این بازی هنوز دستی با تک در زمین ثبت نشده است.</string>
+    <string name="ace_hakem_success_rate">موفقیت حاکم در دست‌های تک‌دار: %1$s%%</string>
+    <string name="csv_header_ace_in_ground">تک در زمین</string>
+    <string name="csv_ace_yes">دارد</string>
+    <string name="csv_ace_no">ندارد</string>
+    <string name="csv_field_track_ace">ثبت وجود تک در زمین</string>
 </resources>

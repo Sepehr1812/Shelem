@@ -25,7 +25,8 @@ class ShelemRepository(private val dao: ShelemDao) {
         team2Player1: String,
         team2Player2: String,
         targetScore: Int,
-        winHandOnlyOver1000: Boolean = true
+        winHandOnlyOver1000: Boolean = true,
+        trackAceInGround: Boolean = false
     ): Long {
         val t1Name = team1Name.ifBlank { "$team1Player1 - $team1Player2" }.ifBlank { "تیم ۱" }
         val t2Name = team2Name.ifBlank { "$team2Player1 - $team2Player2" }.ifBlank { "تیم ۲" }
@@ -38,7 +39,8 @@ class ShelemRepository(private val dao: ShelemDao) {
             team2Player1Name = team2Player1.ifBlank { "بازیکن ۳" },
             team2Player2Name = team2Player2.ifBlank { "بازیکن ۴" },
             targetScore = targetScore,
-            winHandOnlyOver1000 = winHandOnlyOver1000
+            winHandOnlyOver1000 = winHandOnlyOver1000,
+            trackAceInGround = trackAceInGround
         )
         return dao.insertGame(game)
     }
@@ -72,7 +74,8 @@ class ShelemRepository(private val dao: ShelemDao) {
 
     suspend fun completeRound(
         round: RoundEntity,
-        hakemCollectedPoints: Int
+        hakemCollectedPoints: Int,
+        hasAceInGround: Boolean = false
     ) {
         val game = dao.getGameByIdOnce(round.gameId)
         val priorRounds = dao.getRoundsForGameOnce(round.gameId)
@@ -102,7 +105,8 @@ class ShelemRepository(private val dao: ShelemDao) {
             team1FinalScore = calculated.team1FinalScore,
             team2FinalScore = calculated.team2FinalScore,
             status = calculated.result::class.java.simpleName,
-            isCompleted = true
+            isCompleted = true,
+            hasAceInGround = hasAceInGround
         )
 
         dao.updateRound(updatedRound)
@@ -127,7 +131,8 @@ class ShelemRepository(private val dao: ShelemDao) {
         dealerPlayerName: String,
         bidAmount: Int,
         isNaras: Boolean,
-        hakemCollectedPoints: Int
+        hakemCollectedPoints: Int,
+        hasAceInGround: Boolean = false
     ): Long {
         val game = dao.getGameByIdOnce(gameId)
         val priorRounds = dao.getRoundsForGameOnce(gameId).filter { it.isCompleted }
@@ -162,7 +167,8 @@ class ShelemRepository(private val dao: ShelemDao) {
             team1FinalScore = calculated.team1FinalScore,
             team2FinalScore = calculated.team2FinalScore,
             status = calculated.result::class.java.simpleName,
-            isCompleted = true
+            isCompleted = true,
+            hasAceInGround = hasAceInGround
         )
 
         val newRoundId = dao.insertRound(round)

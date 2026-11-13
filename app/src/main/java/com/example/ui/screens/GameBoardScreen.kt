@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material3.AlertDialog
@@ -147,12 +146,12 @@ fun GameBoardScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { showExportCsvSheet = true },
-                        modifier = Modifier.testTag("export_csv_button")
+                        onClick = { showStatisticsSheet = true },
+                        modifier = Modifier.testTag("board_statistics_button")
                     ) {
                         Icon(
-                            imageVector = Icons.Default.FileDownload,
-                            contentDescription = stringResource(R.string.export_csv_action),
+                            imageVector = Icons.Default.BarChart,
+                            contentDescription = stringResource(R.string.game_statistics_title),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -324,8 +323,8 @@ fun GameBoardScreen(
             team1PriorScore = priorT1Score,
             team2PriorScore = priorT2Score,
             onDismiss = { activeRoundForScoreSheet = null },
-            onConfirmScore = { roundToComplete, hakemPoints ->
-                viewModel.completeRound(roundToComplete, hakemPoints) {
+            onConfirmScore = { roundToComplete, hakemPoints, hasAceInGround ->
+                viewModel.completeRound(roundToComplete, hakemPoints, hasAceInGround) {
                     activeRoundForScoreSheet = null
                 }
             }

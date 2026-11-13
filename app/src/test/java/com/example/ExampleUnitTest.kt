@@ -453,5 +453,141 @@ class ExampleUnitTest {
     // Team 1 has 650, Team 2 has -550 -> diff = 1200 >= 1165 -> Alpha wins!
     org.junit.Assert.assertTrue("CSV should contain winner Alpha due to lead difference", csv.contains("Alpha"))
   }
+
+  @Test
+  fun aceInGroundStatistics_calculatesAccurately() {
+    val sampleRounds = listOf(
+      RoundEntity(
+        id = 1,
+        gameId = 1,
+        roundNumber = 1,
+        hakemTeam = 1,
+        hakemPlayerName = "Ali",
+        dealerPlayerName = "Reza",
+        bidAmount = 100,
+        team1FinalScore = 120,
+        team2FinalScore = 45,
+        status = "BidAccomplished",
+        isCompleted = true,
+        hasAceInGround = true
+      ),
+      RoundEntity(
+        id = 2,
+        gameId = 1,
+        roundNumber = 2,
+        hakemTeam = 2,
+        hakemPlayerName = "Reza",
+        dealerPlayerName = "Ali",
+        bidAmount = 165,
+        team1FinalScore = 0,
+        team2FinalScore = 330,
+        status = "Shelem",
+        isCompleted = true,
+        hasAceInGround = false
+      ),
+      RoundEntity(
+        id = 3,
+        gameId = 1,
+        roundNumber = 3,
+        hakemTeam = 1,
+        hakemPlayerName = "Sepehr",
+        dealerPlayerName = "Arash",
+        bidAmount = 110,
+        team1FinalScore = -110,
+        team2FinalScore = 165,
+        status = "BidFailed",
+        isCompleted = true,
+        hasAceInGround = true
+      ),
+      RoundEntity(
+        id = 4,
+        gameId = 1,
+        roundNumber = 4,
+        hakemTeam = 2,
+        hakemPlayerName = "Arash",
+        dealerPlayerName = "Sepehr",
+        bidAmount = 120,
+        team1FinalScore = 130,
+        team2FinalScore = 35,
+        status = "BidAccomplished",
+        isCompleted = true,
+        hasAceInGround = true
+      )
+    )
+
+    val completed = sampleRounds.filter { it.isCompleted && it.status != "Ongoing" }
+    assertEquals(4, completed.size)
+
+    val aceRounds = completed.filter { it.hasAceInGround }
+    assertEquals(3, aceRounds.size)
+
+    // Ratio: 3 out of 4 = 75%
+    val aceRatio = ((aceRounds.size.toFloat() / completed.size) * 100).toInt()
+    assertEquals(75, aceRatio)
+
+    // Team 1 wins in Ace rounds: Round 1 (120 vs 45) and Round 4 (130 vs 35) = 2
+    // Team 2 wins in Ace rounds: Round 3 (-110 vs 165) = 1
+    val aceTeam1Wins = aceRounds.count { it.team1FinalScore > it.team2FinalScore }
+    val aceTeam2Wins = aceRounds.count { it.team2FinalScore > it.team1FinalScore }
+    assertEquals(2, aceTeam1Wins)
+    assertEquals(1, aceTeam2Wins)
+
+    val aceTeam1WinRate = ((aceTeam1Wins.toFloat() / aceRounds.size) * 100).toInt()
+    val aceTeam2WinRate = ((aceTeam2Wins.toFloat() / aceRounds.size) * 100).toInt()
+    assertEquals(66, aceTeam1WinRate)
+    assertEquals(33, aceTeam2WinRate)
+
+    // Hakem accomplishment in ace rounds: Round 1 (Accomplished), Round 4 (Accomplished) = 2 out of 3 = 66%
+    val aceHakemAccomplished = aceRounds.count { it.status == "BidAccomplished" || it.status == "Shelem" }
+    val aceHakemSuccessRate = ((aceHakemAccomplished.toFloat() / aceRounds.size) * 100).toInt()
+    assertEquals(66, aceHakemSuccessRate)
+  }
+
+  @Test
+  fun csvExport_includesAceInGroundWhenEnabled() {
+    val gameWithAce = com.example.data.GameEntity(
+      id = 1,
+      team1Name = "Team A",
+      team2Name = "Team B",
+      team1Player1Name = "P1",
+      team1Player2Name = "P2",
+      team2Player1Name = "P3",
+      team2Player2Name = "P4",
+      targetScore = 1165,
+      trackAceInGround = true
+    )
+
+    val rounds = listOf(
+      RoundEntity(
+        id = 1,
+        gameId = 1,
+        roundNumber = 1,
+        hakemTeam = 1,
+        hakemPlayerName = "P1",
+        dealerPlayerName = "P3",
+        bidAmount = 100,
+        team1FinalScore = 100,
+        team2FinalScore = 65,
+        status = "BidAccomplished",
+        isCompleted = true,
+        hasAceInGround = true
+      )
+    )
+
+    val dummyStrings = object : com.example.util.CsvStringProvider {
+      override fun getString(resId: Int): String = when (resId) {
+        R.string.csv_header_ace_in_ground -> "Ace In Ground"
+        R.string.csv_ace_yes -> "YES_ACE"
+        R.string.csv_ace_no -> "NO_ACE"
+        else -> "STR_$resId"
+      }
+      override fun getString(resId: Int, vararg formatArgs: Any): String = "STR_${resId}_${formatArgs.joinToString("_")}"
+    }
+
+    val csv = com.example.util.CsvExporter.generateCsv(gameWithAce, rounds, dummyStrings)
+    org.junit.Assert.assertTrue("CSV must have Ace In Ground column", csv.contains("Ace In Ground"))
+    org.junit.Assert.assertTrue("CSV must have YES_ACE for round 1", csv.contains("YES_ACE"))
+  }
 }
+
 

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +27,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,12 +50,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.R
+import com.example.ui.theme.GoldAccent
 import com.example.ui.viewmodel.ShelemViewModel
 import com.example.util.PersianNumberHelper.toPersianDigits
 import kotlin.math.roundToInt
@@ -85,6 +89,7 @@ fun GameSetupScreen(
     val targetScore = targetScoreFloat.roundToInt()
 
     var winHandOnlyOver1000 by remember { mutableStateOf(true) }
+    var trackAceInGround by remember { mutableStateOf(false) }
 
     val presetScores = listOf(625, 1165, 1200, 1650)
 
@@ -138,6 +143,7 @@ fun GameSetupScreen(
                                 team2Player2 = team2Player2,
                                 targetScore = targetScore,
                                 winHandOnlyOver1000 = winHandOnlyOver1000,
+                                trackAceInGround = trackAceInGround,
                                 onCreated = onGameCreated
                             )
                         },
@@ -320,6 +326,61 @@ fun GameSetupScreen(
                             checked = winHandOnlyOver1000,
                             onCheckedChange = { winHandOnlyOver1000 = it },
                             modifier = Modifier.testTag("rule_1000_switch")
+                        )
+                    }
+                }
+            }
+
+            // Ace in Ground Tracking Card (Separate Section)
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_spade),
+                            contentDescription = null,
+                            tint = GoldAccent,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = stringResource(R.string.track_ace_in_ground_section_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(R.string.track_ace_in_ground_title),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = stringResource(R.string.track_ace_in_ground_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Switch(
+                            checked = trackAceInGround,
+                            onCheckedChange = { trackAceInGround = it },
+                            modifier = Modifier.testTag("track_ace_switch")
                         )
                     }
                 }
