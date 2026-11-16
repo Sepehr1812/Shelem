@@ -1,6 +1,6 @@
 {
   "name": "شلم!",
-  "description": "برنامه حرفه‌ای، زیبا و هوشمند محاسبه و ثبت امتیازات بازی کارت شلم",
+  "description": "برنامه حرفه‌ای، زیبا و آفلاین محاسبه و ثبت امتیازات بازی کارت شلم",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

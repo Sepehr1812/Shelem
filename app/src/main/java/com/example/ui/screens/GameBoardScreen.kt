@@ -19,11 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.QueryStats
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -74,7 +73,6 @@ fun GameBoardScreen(
     viewModel: ShelemViewModel,
     onBack: () -> Unit,
     onOpenAddRoundSheet: () -> Unit,
-    onOpenAiStrategist: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val activeGame by viewModel.activeGame.collectAsStateWithLifecycle()
@@ -189,7 +187,7 @@ fun GameBoardScreen(
                     },
                     icon = {
                         Icon(
-                            imageVector = if (ongoingRound != null) Icons.Default.AutoAwesome else Icons.Default.Add,
+                            imageVector = if (ongoingRound != null) Icons.Default.Edit else Icons.Default.Add,
                             contentDescription = null
                         )
                     },

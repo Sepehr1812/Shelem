@@ -73,13 +73,6 @@
     <string name="lead_margin">Score Margin: %1$s</string>
     <string name="lead_difference_label">Margin</string>
 
-    <string name="ai_strategist">Shelem AI Strategist</string>
-    <string name="ai_strategist_prompt_hint">Ask about rules, bidding, trump suit, or hand strategy...</string>
-    <string name="ask_ai">Ask AI</string>
-    <string name="analyzing_game">Analyzing scoresheet &amp; hand strategy...</string>
-    <string name="ai_analysis_title">Smart Hand Analysis &amp; Advice</string>
-    <string name="quick_analysis">Quick Match Analysis</string>
-
     <string name="toggle_dark_mode">Toggle Theme (Dark / Light)</string>
     <string name="toggle_language">Toggle Language (FA / EN)</string>
     <string name="back">Back</string>
@@ -104,7 +97,6 @@
     <string name="opponent_points_label">Opponent Points</string>
     <string name="score_preview">Hand Score Preview</string>
     <string name="shelem_165">Shelem (165)</string>
-    <string name="ai_model_desc">Gemini 3.1 Pro (Thinking Mode)</string>
     <string name="language_fa">Persian</string>
     <string name="language_en">English</string>
     <string name="language_code">EN</string>

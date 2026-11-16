@@ -73,13 +73,6 @@
     <string name="lead_margin">اختلاف امتیاز: %1$s</string>
     <string name="lead_difference_label">اختلاف</string>
 
-    <string name="ai_strategist">تحلیل‌گر و استراتژیست شلم</string>
-    <string name="ai_strategist_prompt_hint">سوال خود را درباره قوانین، مزایده (خواندن)، حکم یا استراتژی دست بپرسید...</string>
-    <string name="ask_ai">پرسش از هوش مصنوعی</string>
-    <string name="analyzing_game">در حال تحلیل هوشمند برگه امتیاز و استراتژی دست‌ها...</string>
-    <string name="ai_analysis_title">تحلیل و پیشنهاد هوشمند دست</string>
-    <string name="quick_analysis">تحلیل سریع وضعیت بازی</string>
-
     <string name="toggle_dark_mode">تغییر پوسته (تاریک / روشن)</string>
     <string name="toggle_language">تغییر زبان (فارسی / انگلیسی)</string>
     <string name="back">بازگشت</string>
@@ -104,7 +97,6 @@
     <string name="opponent_points_label">امتیاز تیم مقابل</string>
     <string name="score_preview">پیش‌نمایش امتیاز دست</string>
     <string name="shelem_165">شلم (۱۶۵)</string>
-    <string name="ai_model_desc">مدل Gemini 3.1 Pro (Thinking Mode)</string>
     <string name="language_fa">فارسی</string>
     <string name="language_en">English</string>
     <string name="language_code">فا</string>

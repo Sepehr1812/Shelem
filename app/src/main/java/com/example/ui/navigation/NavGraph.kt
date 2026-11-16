@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.ui.screens.AddRoundBottomSheet
-import com.example.ui.screens.AiStrategistDialog
 import com.example.ui.screens.GameBoardScreen
 import com.example.ui.screens.GameSetupScreen
 import com.example.ui.screens.HomeScreen
@@ -32,7 +31,6 @@ fun ShelemNavGraph(
     viewModel: ShelemViewModel,
     modifier: Modifier = Modifier
 ) {
-    var showAiDialog by remember { mutableStateOf(false) }
     var showAddRoundSheet by remember { mutableStateOf(false) }
     val activeGameState by viewModel.activeGame.collectAsStateWithLifecycle()
     val activeRoundsState by viewModel.activeRounds.collectAsStateWithLifecycle()
@@ -50,9 +48,6 @@ fun ShelemNavGraph(
                 },
                 onNavigateToBoard = { gameId ->
                     navController.navigate(ShelemDestinations.createBoardRoute(gameId))
-                },
-                onOpenAiStrategist = {
-                    showAiDialog = true
                 }
             )
         }
@@ -78,17 +73,9 @@ fun ShelemNavGraph(
             GameBoardScreen(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
-                onOpenAddRoundSheet = { showAddRoundSheet = true },
-                onOpenAiStrategist = { showAiDialog = true }
+                onOpenAddRoundSheet = { showAddRoundSheet = true }
             )
         }
-    }
-
-    if (showAiDialog) {
-        AiStrategistDialog(
-            viewModel = viewModel,
-            onDismiss = { showAiDialog = false }
-        )
     }
 
     if (showAddRoundSheet) {

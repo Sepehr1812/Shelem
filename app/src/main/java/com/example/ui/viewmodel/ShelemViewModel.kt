@@ -3,14 +3,12 @@ package com.example.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.ai.GeminiClient
 import com.example.data.AppDatabase
 import com.example.data.GameEntity
 import com.example.data.GameWithRounds
 import com.example.data.RoundEntity
 import com.example.data.ShelemRepository
 import com.example.domain.Team
-import com.example.util.PersianNumberHelper.toPersianDigits
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,13 +17,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-sealed class AiState {
-    object Idle : AiState()
-    object Loading : AiState()
-    data class Success(val response: String) : AiState()
-    data class Error(val message: String) : AiState()
-}
 
 class ShelemViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -93,9 +84,6 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
         )
-
-    private val _aiState = MutableStateFlow<AiState>(AiState.Idle)
-    val aiState: StateFlow<AiState> = _aiState.asStateFlow()
 
     fun selectActiveGame(gameId: Long) {
         _activeGameId.value = gameId
@@ -215,70 +203,5 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             repository.toggleGameFinished(gameId)
         }
-    }
-
-    fun askAiStrategist(customPrompt: String? = null) {
-        viewModelScope.launch {
-            _aiState.value = AiState.Loading
-
-            val game = activeGame.value
-            val rounds = activeRounds.value
-
-            val isPersian = java.util.Locale.getDefault().language.startsWith("fa", ignoreCase = true)
-            val promptText = if (customPrompt.isNullOrBlank()) {
-                if (game != null) {
-                    val t1Total = rounds.sumOf { it.team1FinalScore }
-                    val t2Total = rounds.sumOf { it.team2FinalScore }
-                    val lastRound = rounds.firstOrNull()
-
-                    if (isPersian) {
-                        val lastRoundInfo = if (lastRound != null) {
-                            "دست قبلی: حاکم=${lastRound.hakemPlayerName}، تعهد (خوانده)=${lastRound.bidAmount.toPersianDigits()}، پاسور=${lastRound.dealerPlayerName}، امتیاز دست تیم ۱=${lastRound.team1FinalScore.toPersianDigits()}، تیم ۲=${lastRound.team2FinalScore.toPersianDigits()} (${lastRound.status})"
-                        } else "هنوز دستی بازی نشده است."
-
-                        """
-                        تحلیل سریع برگه امتیاز بازی جاری شلم:
-                        - نام تیم ۱: ${game.team1Name} (بازیکنان: ${game.team1Player1Name}، ${game.team1Player2Name}) - مجموع امتیاز: ${t1Total.toPersianDigits()}
-                        - نام تیم ۲: ${game.team2Name} (بازیکنان: ${game.team2Player1Name}، ${game.team2Player2Name}) - مجموع امتیاز: ${t2Total.toPersianDigits()}
-                        - امتیاز هدف بازی: ${game.targetScore.toPersianDigits()}
-                        - تعداد دست‌های بازی‌شده: ${rounds.size.toPersianDigits()}
-                        - $lastRoundInfo
-
-                        لطفاً وضعیت فعلی بازی را تحلیل کنید، مشخص کنید کدام تیم در مزایده (خواندن) بعدی نیاز به ریسک دارد و استراتژی پیشنهادی برای حاکم شدن، تعیین حکم و پُر کردن تعهد یا خالی کردن حریف چیست.
-                        """.trimIndent()
-                    } else {
-                        val lastRoundInfo = if (lastRound != null) {
-                            "Previous hand: Declarer=${lastRound.hakemPlayerName}, Bid (Contract)=${lastRound.bidAmount}, Dealer=${lastRound.dealerPlayerName}, Hand score Team 1=${lastRound.team1FinalScore}, Team 2=${lastRound.team2FinalScore} (${lastRound.status})"
-                        } else "No hands played yet."
-
-                        """
-                        Quick Shelem scoresheet analysis:
-                        - Team 1: ${game.team1Name} (Players: ${game.team1Player1Name}, ${game.team1Player2Name}) - Total Score: $t1Total
-                        - Team 2: ${game.team2Name} (Players: ${game.team2Player1Name}, ${game.team2Player2Name}) - Total Score: $t2Total
-                        - Target Score: ${game.targetScore}
-                        - Completed Hands: ${rounds.size}
-                        - $lastRoundInfo
-
-                        Please analyze the current match state, advise which team needs to bid aggressively in the next auction, and recommend strategies for making the bid, choosing the trump suit, or setting the opponent.
-                        """.trimIndent()
-                    }
-                } else {
-                    if (isPersian) {
-                        "لطفاً استراتژی اصولی مزایده (خواندن)، انتخاب خال حکم، پُر کردن تعهد و خالی کردن حریف در بازی شلم را توضیح دهید."
-                    } else {
-                        "Please explain core Shelem strategies including bidding (auction), trump suit selection, making the bid, and setting the declarer."
-                    }
-                }
-            } else {
-                customPrompt
-            }
-
-            val result = GeminiClient.analyzeGameOrStrategy(promptText)
-            _aiState.value = AiState.Success(result)
-        }
-    }
-
-    fun resetAiState() {
-        _aiState.value = AiState.Idle
     }
 }
