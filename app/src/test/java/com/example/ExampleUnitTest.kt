@@ -666,6 +666,10 @@ class ExampleUnitTest {
     assertEquals(3, stats.bestStreakCount)
     assertEquals("شوالیه‌ها", stats.bestStreakTeamName)
     assertEquals("علی", stats.mvpPlayer?.playerName)
+    assertEquals(
+      listOf("علی", "سپهر", "آرش", "رضا"),
+      stats.playerStats.map { it.playerName }
+    )
     assertEquals(-120, stats.biggestFallScore)
     assertEquals(1, stats.clutchBidRoundNumber)
     assertEquals(135, stats.clutchBidAmount)

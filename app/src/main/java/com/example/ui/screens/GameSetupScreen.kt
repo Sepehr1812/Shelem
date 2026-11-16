@@ -675,10 +675,13 @@ private fun OverheadTableCard(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Text(
                         text = stringResource(R.string.table_seating_title),
                         style = MaterialTheme.typography.titleMedium,
@@ -693,7 +696,7 @@ private fun OverheadTableCard(
                 }
                 OutlinedButton(
                     onClick = onSwapOpponents,
-                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
                     shape = RoundedCornerShape(10.dp),
                     border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.6f)),
                     modifier = Modifier.testTag("swap_opponents_button")
@@ -704,7 +707,7 @@ private fun OverheadTableCard(
                         tint = GoldAccent,
                         modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = stringResource(R.string.swap_opponents_seats),
                         style = MaterialTheme.typography.labelSmall,

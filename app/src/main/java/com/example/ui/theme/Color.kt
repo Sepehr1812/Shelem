@@ -17,6 +17,8 @@ val PersianRed = Color(0xFFD32F2F)
 val PersianRedContainer = Color(0xFFFFDAD6)
 val EmeraldGreen = Color(0xFF2E7D32)
 val EmeraldGreenContainer = Color(0xFFC8E6C9)
+val NarasPurple = Color(0xFF6A1B9A)
+val NarasPurpleContainer = Color(0xFFF3E5F5)
 
 val CardBackgroundLight = Color(0xFFFFFFFF)
 val CardBackgroundDark = Color(0xFF1A2621)

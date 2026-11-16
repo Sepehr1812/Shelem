@@ -54,7 +54,7 @@
 
     <string name="status_shelem">Shelem (+330)</string>
     <string name="status_negative_shelem">Double Set</string>
-    <string name="status_bid_accomplished">Bid Made</string>
+    <string name="status_bid_accomplished">Made</string>
     <string name="status_bid_failed">Set</string>
     <string name="status_shelem_card">Shelem! 🎉</string>
     <string name="status_negative_shelem_card">Double Set ❌</string>
@@ -100,6 +100,8 @@
     <string name="bid_label_with_value">Bid: %1$s</string>
     <string name="dealer_label_with_name">🃏 Dealer: %1$s</string>
     <string name="hakem_points_value">Declarer: %1$s</string>
+    <string name="hakem_points_label">Declarer Points</string>
+    <string name="opponent_points_label">Opponent Points</string>
     <string name="score_preview">Hand Score Preview</string>
     <string name="shelem_165">Shelem (165)</string>
     <string name="ai_model_desc">Gemini 3.1 Pro (Thinking Mode)</string>

@@ -296,7 +296,13 @@ object GameStatisticsCalculator {
                 netHakemScore = pNetScore,
                 dealerCount = pDealerCount
             )
-        }
+        }.sortedWith(
+            compareByDescending<PlayerStat> { it.hakemCount > 0 }
+                .thenByDescending { it.netHakemScore }
+                .thenByDescending { it.successRate }
+                .thenByDescending { it.maxBidMade }
+                .thenByDescending { it.hakemCount }
+        )
 
         val mvpPlayer = playerStats
             .filter { it.hakemCount > 0 }

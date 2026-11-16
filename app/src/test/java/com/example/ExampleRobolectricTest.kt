@@ -33,7 +33,7 @@ class ExampleRobolectricTest {
 
         assertEquals("Set", enContext.getString(R.string.status_bid_failed))
         assertEquals("Set", enContext.getString(R.string.outcome_failed_short))
-        assertEquals("Bid Made", enContext.getString(R.string.status_bid_accomplished))
+        assertEquals("Made", enContext.getString(R.string.status_bid_accomplished))
         assertEquals("Made", enContext.getString(R.string.outcome_accomplished_short))
         assertEquals("Double Set", enContext.getString(R.string.status_negative_shelem))
         assertEquals("Double Set", enContext.getString(R.string.outcome_neg_shelem_short))

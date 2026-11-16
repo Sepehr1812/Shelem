@@ -100,6 +100,8 @@
     <string name="bid_label_with_value">تعهد: %1$s</string>
     <string name="dealer_label_with_name">🃏 پاسور: %1$s</string>
     <string name="hakem_points_value">حاکم: %1$s</string>
+    <string name="hakem_points_label">امتیاز تیم حاکم</string>
+    <string name="opponent_points_label">امتیاز تیم مقابل</string>
     <string name="score_preview">پیش‌نمایش امتیاز دست</string>
     <string name="shelem_165">شلم (۱۶۵)</string>
     <string name="ai_model_desc">مدل Gemini 3.1 Pro (Thinking Mode)</string>

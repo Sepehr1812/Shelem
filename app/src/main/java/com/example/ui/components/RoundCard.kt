@@ -55,6 +55,8 @@ import com.example.data.RoundEntity
 import com.example.ui.theme.EmeraldGreen
 import com.example.ui.theme.EmeraldGreenContainer
 import com.example.ui.theme.GoldAccent
+import com.example.ui.theme.NarasPurple
+import com.example.ui.theme.NarasPurpleContainer
 import com.example.ui.theme.PersianRed
 import com.example.ui.theme.PersianRedContainer
 import com.example.ui.theme.ShelemTheme
@@ -173,15 +175,16 @@ fun RoundCard(
                     if (round.isNaras) {
                         Spacer(modifier = Modifier.width(6.dp))
                         Surface(
-                            color = MaterialTheme.colorScheme.errorContainer,
-                            shape = RoundedCornerShape(6.dp)
+                            color = NarasPurpleContainer,
+                            shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(1.dp, NarasPurple.copy(alpha = 0.25f))
                         ) {
                             Text(
                                 text = stringResource(R.string.naras_badge),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onErrorContainer,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                color = NarasPurple,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                             )
                         }
                     }

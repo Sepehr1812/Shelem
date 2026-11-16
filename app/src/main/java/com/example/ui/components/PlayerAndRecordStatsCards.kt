@@ -316,7 +316,7 @@ private fun PlayerStatRowItem(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
@@ -402,41 +402,75 @@ private fun PlayerStatRowItem(
                     }
                 }
 
-                // Detailed Chips Row
-                Row(
+                // Detailed 2x2 Metric Grid (clean spacing across Persian & English locales)
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    Text(
-                        text = stringResource(R.string.player_hakem_count, player.hakemCount.toPersianDigits()),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = stringResource(R.string.player_success_rate, player.successRate.toPersianDigits()),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = if (player.successRate >= 50) EmeraldGreen else PersianRed
-                    )
-                    Text(
-                        text = stringResource(R.string.player_avg_bid, player.avgBid.toPersianDigits()),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = stringResource(
-                            R.string.player_max_bid,
-                            if (player.maxBidMade > 0) player.maxBidMade.toPersianDigits() else "—"
-                        ),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = GoldAccent
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        PlayerMetricPill(
+                            text = stringResource(R.string.player_hakem_count, player.hakemCount.toPersianDigits()),
+                            textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f)
+                        )
+                        PlayerMetricPill(
+                            text = stringResource(R.string.player_success_rate, player.successRate.toPersianDigits()),
+                            textColor = if (player.successRate >= 50) EmeraldGreen else PersianRed,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        PlayerMetricPill(
+                            text = stringResource(R.string.player_avg_bid, player.avgBid.toPersianDigits()),
+                            textColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        PlayerMetricPill(
+                            text = stringResource(
+                                R.string.player_max_bid,
+                                if (player.maxBidMade > 0) player.maxBidMade.toPersianDigits() else "—"
+                            ),
+                            textColor = GoldAccent,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PlayerMetricPill(
+    text: String,
+    textColor: Color,
+    fontWeight: FontWeight,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f)
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = fontWeight,
+            color = textColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+        )
     }
 }
 
