@@ -109,35 +109,35 @@
     <string name="next_language_code">EN</string>
 
     <!-- Game Statistics -->
-    <string name="game_statistics_title">آمار و ارقام بازی</string>
-    <string name="game_statistics_desc">تحلیل جامع دست‌ها، امتیازات و عملکرد تیم‌ها</string>
-    <string name="total_rounds_played">تعداد کل دست‌های بازی‌شده</string>
+    <string name="game_statistics_title">آمار بازی</string>
+    <string name="game_statistics_desc">تفکیک جامع دست‌ها، امتیازات و عملکرد تیم‌ها</string>
+    <string name="total_rounds_played">کل دست‌ها</string>
     <string name="rounds_count_format">%1$s دست</string>
     <string name="highest_single_round_score">بالاترین امتیاز تک‌دست</string>
-    <string name="highest_round_detail">دست %1$s توسط %2$s (%3$s امتیاز)</string>
+    <string name="highest_round_detail">دست %1$s توسط %2$s</string>
     <string name="highest_round_empty">هنوز دستی تکمیل نشده است</string>
-    <string name="win_loss_distribution">توزیع برد و باخت دست‌ها</string>
-    <string name="team1_wins_label">بردهای %1$s</string>
-    <string name="team2_wins_label">بردهای %1$s</string>
+    <string name="win_loss_distribution">توزیع برد و باخت</string>
+    <string name="team1_wins_label">دست‌های برده %1$s</string>
+    <string name="team2_wins_label">دست‌های برده %1$s</string>
     <string name="ties_label">دست‌های مساوی</string>
     <string name="win_rate_format">%1$s (%2$s%%)</string>
-    <string name="bidding_performance">عملکرد تعهد و حاکمی</string>
-    <string name="successful_bids">تعهد موفق (خوانده و شده)</string>
-    <string name="failed_bids">تعهد ناموفق (افتاده)</string>
+    <string name="bidding_performance">عملکرد تعهد</string>
+    <string name="successful_bids">تعهدهای موفق</string>
+    <string name="failed_bids">تعهدهای ناموفق (افتاده)</string>
     <string name="average_score_title">میانگین امتیاز هر دست</string>
-    <string name="special_events_title">رویدادهای خاص</string>
-    <string name="shelems_count">شلم‌های ثبت‌شده: %1$s</string>
+    <string name="special_events_title">رویدادهای ویژه</string>
+    <string name="shelems_count">شلم‌های کسب‌شده: %1$s</string>
     <string name="naras_count">دست‌های نرس: %1$s</string>
     <string name="dealer_rotation_badge">گردش نوبت دیلر (دست قبلی: %1$s)</string>
     <string name="first_round_dealer_hint">نوبت دست‌دهنده اول بازی</string>
-    <string name="score_progression_title">نمودار روند امتیازات تجمیعی</string>
-    <string name="score_progression_subtitle">تغییرات مجموع امتیازات دو تیم در طول دست‌های بازی</string>
+    <string name="score_progression_title">روند امتیازات تجمیعی</string>
+    <string name="score_progression_subtitle">روند مجموع امتیازات تیم‌ها در طول دست‌ها</string>
     <string name="chart_start_point">شروع</string>
     <string name="chart_round_label">دست %1$s</string>
-    <string name="target_score_chart_label">سقف برد: %1$s</string>
-    <string name="lead_by_format">%1$s امتیاز برتری %2$s</string>
-    <string name="round_delta_format">امتیاز این دست: %1$s</string>
-    <string name="tap_point_hint">برای مشاهده جزئیات هر دست، روی نقاط نمودار لمس کنید</string>
+    <string name="target_score_chart_label">هدف: %1$s</string>
+    <string name="lead_by_format">%1$s امتیاز برتری برای %2$s</string>
+    <string name="round_delta_format">امتیاز دست: %1$s</string>
+    <string name="tap_point_hint">برای مشاهده تفکیک دست، روی هر نقطه از نمودار بزنید</string>
     <string name="close">بستن</string>
 
     <string name="game_rules_title">قوانین بازی</string>
@@ -148,64 +148,64 @@
 
     <!-- CSV Export Strings -->
     <string name="export_csv_action">خروجی CSV</string>
-    <string name="export_csv_title">خروجی فایل اکسل و CSV</string>
-    <string name="export_csv_description">دریافت و ذخیره کارنامه کامل بازی شامل جزئیات تمام دست‌ها، تعهدات و امتیازات به فرمت CSV</string>
-    <string name="export_csv_save">ذخیره فایل در گوشی</string>
+    <string name="export_csv_title">خروجی خلاصه بازی (CSV)</string>
+    <string name="export_csv_description">خروجی و ذخیره خلاصه کامل بازی و تفکیک دست‌به‌دست به صورت فایل جدول CSV</string>
+    <string name="export_csv_save">ذخیره فایل در دستگاه</string>
     <string name="export_csv_share">اشتراک‌گذاری فایل</string>
     <string name="export_csv_success">فایل CSV با موفقیت ذخیره شد</string>
     <string name="export_csv_error">خطا در ذخیره فایل CSV</string>
-    <string name="export_csv_share_subject">کارنامه بازی شلم - %1$s در برابر %2$s</string>
+    <string name="export_csv_share_subject">کارنامه بازی شلم - %1$s مقابل %2$s</string>
     <string name="csv_game_summary_header">خلاصه بازی شلم</string>
     <string name="csv_field_game_id">شناسه بازی</string>
     <string name="csv_field_date">تاریخ</string>
-    <string name="csv_field_target_score">سقف امتیاز</string>
-    <string name="csv_field_rule_1000">قانون امتیاز ۱۰۰۰</string>
+    <string name="csv_field_target_score">امتیاز هدف</string>
+    <string name="csv_field_rule_1000">قانون امتیاز +۱۰۰۰</string>
     <string name="csv_field_status">وضعیت بازی</string>
-    <string name="csv_field_winner">تیم برنده</string>
+    <string name="csv_field_winner">برنده</string>
     <string name="csv_field_active">فعال</string>
     <string name="csv_field_inactive">غیرفعال</string>
-    <string name="csv_status_finished">پایان یافته</string>
-    <string name="csv_status_ongoing">در حال اجرا</string>
+    <string name="csv_status_finished">پایان‌یافته</string>
+    <string name="csv_status_ongoing">در جریان</string>
     <string name="csv_header_round">دست</string>
     <string name="csv_header_hakem_team">تیم حاکم</string>
     <string name="csv_header_hakem_player">بازیکن حاکم</string>
-    <string name="csv_header_dealer">دست‌دهنده (دیلر)</string>
+    <string name="csv_header_dealer">دیلر</string>
     <string name="csv_header_bid">تعهد</string>
-    <string name="csv_header_claim_type">نوع تعهد</string>
-    <string name="csv_header_t1_raw">شمارش %1$s</string>
-    <string name="csv_header_t2_raw">شمارش %1$s</string>
-    <string name="csv_header_t1_score">امتیاز %1$s</string>
-    <string name="csv_header_t2_score">امتیاز %1$s</string>
-    <string name="csv_header_t1_total">مجموع %1$s</string>
-    <string name="csv_header_t2_total">مجموع %1$s</string>
-    <string name="csv_header_result">نتیجه دست</string>
+    <string name="csv_header_claim_type">نوع ادعا</string>
+    <string name="csv_header_t1_raw">امتیاز خام %1$s</string>
+    <string name="csv_header_t2_raw">امتیاز خام %1$s</string>
+    <string name="csv_header_t1_score">امتیاز دست %1$s</string>
+    <string name="csv_header_t2_score">امتیاز دست %1$s</string>
+    <string name="csv_header_t1_total">مجموع تجمیعی %1$s</string>
+    <string name="csv_header_t2_total">مجموع تجمیعی %1$s</string>
+    <string name="csv_header_result">وضعیت دست</string>
     <string name="csv_claim_normal">عادی</string>
     <string name="csv_claim_shelem">شلم</string>
-    <string name="csv_claim_naras">شلم نارس</string>
+    <string name="csv_claim_naras">شلم نرس</string>
 
     <!-- Ace in Ground Feature -->
     <string name="track_ace_in_ground_title">فعالسازی ثبت وجود تک در زمین</string>
     <string name="track_ace_in_ground_desc">امکان ثبت وجود کارت تک در برگ‌های زمین در هر دست</string>
-    <string name="track_ace_in_ground_short_badge">ثبت تک زمین</string>
+    <string name="track_ace_in_ground_short_badge">تک در زمین</string>
     <string name="track_ace_in_ground_section_title">ثبت وجود تک در زمین</string>
     <string name="has_ace_in_ground_question">آیا زمین تک داشت؟</string>
     <string name="has_ace_in_ground_desc">ثبت وجود برگ آس (تک) در برگ‌های زمین این دست</string>
     <string name="ace_in_ground_badge">♠️</string>
-    <string name="ace_statistics_title">آمار دست‌های تک‌دار</string>
-    <string name="ace_statistics_desc">تعداد، نسبت و عملکرد تیم‌ها در دست‌هایی که زمین کارت تک داشته است</string>
-    <string name="ace_rounds_count_format">%1$s دست از %2$s دست (%3$s%%)</string>
+    <string name="ace_statistics_title">آمار تک در زمین</string>
+    <string name="ace_statistics_desc">تعداد، نسبت و نتایج تیم‌ها در دست‌های دارای تک در زمین</string>
+    <string name="ace_rounds_count_format">%1$s از %2$s دست (%3$s%%)</string>
     <string name="ace_rounds_from_total_format">از %1$s دست (%2$s%%)</string>
     <string name="ace_rounds_total_label">دست‌های دارای تک</string>
-    <string name="ace_rounds_ratio_label">نسبت به کل بازی</string>
-    <string name="ace_hakem_win_rate_title">برد حاکم در دست‌های تک‌دار</string>
-    <string name="ace_hakem_wins_fraction">%1$s دست از %2$s دست</string>
+    <string name="ace_rounds_ratio_label">نسبت به کل</string>
+    <string name="ace_hakem_win_rate_title">نرخ برد حاکم در دست‌های تک‌دار</string>
+    <string name="ace_hakem_wins_fraction">%1$s از %2$s دست</string>
     <string name="ace_team_performance_title">عملکرد تیم‌ها در دست‌های تک‌دار</string>
     <string name="ace_team_wins_format">بردهای %1$s: %2$s دست (%3$s%%)</string>
-    <string name="ace_no_rounds_recorded">در این بازی هنوز دستی با تک در زمین ثبت نشده است.</string>
+    <string name="ace_no_rounds_recorded">هنوز دستی با تک در زمین در این بازی ثبت نشده است.</string>
     <string name="ace_hakem_success_rate">موفقیت حاکم در دست‌های تک‌دار: %1$s%%</string>
     <string name="csv_header_ace_in_ground">تک در زمین</string>
-    <string name="csv_ace_yes">دارد</string>
-    <string name="csv_ace_no">ندارد</string>
+    <string name="csv_ace_yes">بله</string>
+    <string name="csv_ace_no">خیر</string>
     <string name="csv_field_track_ace">ثبت وجود تک در زمین</string>
 
     <!-- Three-Step Game Setup & Table Seating -->
@@ -234,4 +234,97 @@
     <string name="player_teammate_hint">هم‌تیمی (روبه‌روی شما)</string>
     <string name="player_right_hint">بازیکن سمت راست</string>
     <string name="player_left_hint">بازیکن سمت چپ</string>
+
+    <!-- Enhanced Game Statistics & Charts -->
+    <string name="stat_tab_all">همه آمارها</string>
+    <string name="stat_tab_charts">نمودارها و روند</string>
+    <string name="stat_tab_bidding">بیدینگ و حاکم</string>
+    <string name="stat_tab_players">بهترین بازیکنان</string>
+    <string name="stat_tab_records">رکوردهای بازی</string>
+    <string name="stat_tab_ace">تک در زمین</string>
+
+    <string name="stat_hero_live_score">امتیاز تجمیعی در دست %1$s</string>
+    <string name="stat_hero_target_progress">پیشرفت تا هدف (%1$s)</string>
+    <string name="stat_hero_leading_team">پیشتاز فعلی: %1$s (+%2$s)</string>
+    <string name="stat_hero_tied_game">بازی در حال حاضر مساوی است</string>
+
+    <string name="stat_kpi_win_streak">بهترین نوار برد</string>
+    <string name="stat_kpi_streak_value">%1$s دست پیاپی</string>
+    <string name="stat_kpi_hakem_rate">موفقیت حاکم</string>
+    <string name="stat_kpi_avg_bid">میانگین تعهد بازی</string>
+    <string name="stat_kpi_points_per_round">میانگین تعهد</string>
+
+    <string name="round_bar_chart_title">نمودار میله‌ای امتیاز دست‌به‌دست</string>
+    <string name="round_bar_chart_subtitle">امتیازات مثبت و منفی در هر دست (برای جزئیات روی هر میله بزنید)</string>
+    <string name="round_bar_raw_points">امتیاز خام برگ‌ها: %1$s (%2$s) - %3$s (%4$s)</string>
+
+    <string name="outcomes_donut_title">نمودار دایره‌ای نتایج دست‌ها و سهم برد</string>
+    <string name="outcomes_donut_subtitle">توزیع نتایج تعهدها و برد دست‌های هر تیم</string>
+    <string name="donut_mode_outcomes">نتایج تعهدها</string>
+    <string name="donut_mode_team_wins">سهم برد تیم‌ها</string>
+    <string name="donut_center_rounds">کل دست‌ها</string>
+    <string name="donut_center_success">درصد برد حاکم</string>
+    <string name="outcome_accomplished_short">پر</string>
+    <string name="outcome_shelem_short">شلم</string>
+    <string name="outcome_failed_short">خالی</string>
+    <string name="outcome_neg_shelem_short">دوبل منفی</string>
+
+    <string name="radar_chart_title">نمودار راداری چندبعدی تیم‌ها</string>
+    <string name="radar_chart_subtitle">مقایسه ۵محوره کیفیت بازی و جمع‌آوری برگ‌های تیم‌ها</string>
+    <string name="radar_axis_win_rate">نرخ برد</string>
+    <string name="radar_axis_bid_success">موفقیت تعهد</string>
+    <string name="radar_axis_raw_points">امتیاز برگ‌ها</string>
+    <string name="radar_axis_aggression">جسارت تعهد</string>
+    <string name="radar_axis_efficiency">بهره‌وری امتیاز</string>
+    <string name="raw_points_comparison_title">مجموع امتیاز خام برگ‌های جمع‌آوری‌شده در کل بازی</string>
+    <string name="raw_points_share_format">%1$s امتیاز (%2$s%% از کل برگ‌های میز)</string>
+    <string name="raw_points_count_only">%1$s امتیاز</string>
+    <string name="raw_points_percent_only">%1$s%% از برگ‌های میز</string>
+
+    <string name="guide_toggle_label">راهنما</string>
+    <string name="radar_guide_title">راهنمای معیارهای نمودار راداری</string>
+    <string name="radar_guide_win_rate_desc">درصد دست‌هایی که تیم برنده آن دست بوده است.</string>
+    <string name="radar_guide_bid_success_desc">درصد دست‌های حاکمی که تیم تعهد خود را پر کرده یا شلم شده است.</string>
+    <string name="radar_guide_raw_points_desc">سهم از کل امتیازات خام برگ‌های جمع‌آوری‌شده در تمام دست‌ها (از ۱۶۵ امتیاز در هر دست).</string>
+    <string name="radar_guide_aggression_desc">جسارت در تعهد بر اساس میانگین تعهد تیم بین ۱۰۰ تا ۱۶۵.</string>
+    <string name="radar_guide_efficiency_desc">بهره‌وری امتیازگیری: نسبت میانگین امتیاز نهایی هر دست به ۱۶۵ امتیاز پایه.</string>
+
+    <string name="bid_distribution_title">توزیع تعهدهای ثبت‌شده</string>
+    <string name="bid_distribution_subtitle">تعداد تعهدهای ثبت‌شده در هر عدد و نرخ موفقیت آن‌ها</string>
+    <string name="bid_bracket_100_115">۱۰۰ تا ۱۱۵</string>
+    <string name="bid_bracket_120_130">۱۲۰ تا ۱۳۰</string>
+    <string name="bid_bracket_135_145">۱۳۵ تا ۱۴۵</string>
+    <string name="bid_bracket_150_165">۱۵۰ تا شلم</string>
+    <string name="bid_bracket_success_label">%1$s%% پر</string>
+    <string name="avg_bid_label">میانگین تعهد: %1$s</string>
+    <string name="max_bid_made_label">بالاترین تعهد موفق: %1$s</string>
+    <string name="bid_accuracy_overtrick">میانگین مازاد بر تعهد: %1$s</string>
+
+    <string name="player_stats_title">عملکرد فردی بازیکنان و ستاره بازی</string>
+    <string name="player_stats_subtitle">تعداد حاکمی، نرخ موفقیت تعهد، میانگین تعهد و امتیاز خالص هر بازیکن</string>
+    <string name="player_hakem_guide_title">امتیاز خالص حاکمی چیست؟</string>
+    <string name="player_hakem_guide_desc">مجموع تمام امتیازات (مثبت یا منفی) کسب‌شده توسط تیم بازیکن در دست‌هایی که این بازیکن حاکم بوده است (تعهدهای موفق و شلم‌ها منهای جریمه تعهدهای ناموفق).</string>
+    <string name="mvp_hakem_badge">👑 بهترین حاکم بازی: %1$s</string>
+    <string name="mvp_hakem_desc">%1$s بار حاکم، %2$s%% نرخ موفقیت و %3$s امتیاز خالص در حاکمی</string>
+    <string name="player_hakem_count">%1$s بار حاکم</string>
+    <string name="player_avg_bid">میانگین تعهد: %1$s</string>
+    <string name="player_max_bid">بهترین تعهد: %1$s</string>
+    <string name="player_net_hakem_score">خالص در حاکمی: %1$s</string>
+    <string name="player_success_rate">موفقیت: %1$s%%</string>
+    <string name="player_no_hakem_yet">هنوز نوبت حاکمی نداشته</string>
+
+    <string name="records_highlights_title">رکوردهای بازی و نکات ویژه</string>
+    <string name="records_highlights_subtitle">نقاط عطف و رکوردهای شاخص ثبت‌شده در این بازی</string>
+    <string name="record_biggest_fall_title">بیشترین جریمه (بدترین سقوط)</string>
+    <string name="record_biggest_fall_val">دست %1$s (%2$s: %3$s امتیاز)</string>
+    <string name="record_biggest_fall_none">بدون تعهد ناموفق تا این لحظه! 🎉</string>
+    <string name="record_clutch_bid_title">دقیق‌ترین تعهد حساس</string>
+    <string name="record_clutch_bid_val">دست %1$s (%2$s: تعهد %3$s، گرفته‌شده %4$s)</string>
+    <string name="record_clutch_bid_none">هنوز تعهد موفقی ثبت نشده است</string>
+    <string name="record_max_lead_title">بیشترین اختلاف امتیاز ثبت‌شده</string>
+    <string name="record_max_lead_val">%1$s امتیاز برتری توسط %2$s (دست %3$s)</string>
+    <string name="record_lucky_dealer_title">خوش‌شانس‌ترین دیلر میز</string>
+    <string name="record_lucky_dealer_val">%1$s (میانگین +%2$s برای %3$s)</string>
+    <string name="record_rule_1000_blocks_title">توقف‌های قانون +۱۰۰۰</string>
+    <string name="record_rule_1000_blocks_val">%1$s دست صفرشده با قانون +۱۰۰۰</string>
 </resources>

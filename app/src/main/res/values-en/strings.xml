@@ -111,10 +111,10 @@
     <!-- Game Statistics -->
     <string name="game_statistics_title">Game Statistics</string>
     <string name="game_statistics_desc">Comprehensive breakdown of rounds, scores, and team performance</string>
-    <string name="total_rounds_played">Total Rounds Played</string>
+    <string name="total_rounds_played">Total Rounds</string>
     <string name="rounds_count_format">%1$s Rounds</string>
     <string name="highest_single_round_score">Highest Single-Round Score</string>
-    <string name="highest_round_detail">Round %1$s by %2$s (%3$s pts)</string>
+    <string name="highest_round_detail">Round %1$s by %2$s</string>
     <string name="highest_round_empty">No rounds completed yet</string>
     <string name="win_loss_distribution">Win / Loss Distribution</string>
     <string name="team1_wins_label">%1$s Rounds Won</string>
@@ -234,4 +234,97 @@
     <string name="player_teammate_hint">Teammate (Opposite Seat)</string>
     <string name="player_right_hint">Right Seat Player</string>
     <string name="player_left_hint">Left Seat Player</string>
+
+    <!-- Enhanced Game Statistics & Charts -->
+    <string name="stat_tab_all">All Stats</string>
+    <string name="stat_tab_charts">Charts &amp; Flow</string>
+    <string name="stat_tab_bidding">Bidding &amp; Hakem</string>
+    <string name="stat_tab_players">Players MVP</string>
+    <string name="stat_tab_records">Match Records</string>
+    <string name="stat_tab_ace">Ace in Ground</string>
+
+    <string name="stat_hero_live_score">Cumulative Score at Round %1$s</string>
+    <string name="stat_hero_target_progress">Progress to Target (%1$s)</string>
+    <string name="stat_hero_leading_team">Current Leader: %1$s (+%2$s)</string>
+    <string name="stat_hero_tied_game">Match is currently tied</string>
+
+    <string name="stat_kpi_win_streak">Best Win Streak</string>
+    <string name="stat_kpi_streak_value">%1$s Rounds in a Row</string>
+    <string name="stat_kpi_hakem_rate">Hakem Success</string>
+    <string name="stat_kpi_avg_bid">Average Match Bid</string>
+    <string name="stat_kpi_points_per_round">Mean Contract Bid</string>
+
+    <string name="round_bar_chart_title">Round-by-Round Score Bar Chart</string>
+    <string name="round_bar_chart_subtitle">Positive &amp; negative scores per round (Tap any bar for details)</string>
+    <string name="round_bar_raw_points">Raw Card Points: %1$s (%2$s) - %3$s (%4$s)</string>
+
+    <string name="outcomes_donut_title">Round Outcomes &amp; Win Share Donut Chart</string>
+    <string name="outcomes_donut_subtitle">Distribution of contract results and team round wins</string>
+    <string name="donut_mode_outcomes">Contract Outcomes</string>
+    <string name="donut_mode_team_wins">Team Win Share</string>
+    <string name="donut_center_rounds">Total Hands</string>
+    <string name="donut_center_success">Hakem Win %</string>
+    <string name="outcome_accomplished_short">Made</string>
+    <string name="outcome_shelem_short">Shelem</string>
+    <string name="outcome_failed_short">Failed</string>
+    <string name="outcome_neg_shelem_short">Double Negative</string>
+
+    <string name="radar_chart_title">Multi-Dimensional Team Radar Chart</string>
+    <string name="radar_chart_subtitle">5-axis comparison of team play quality and card collection</string>
+    <string name="radar_axis_win_rate">Win Rate</string>
+    <string name="radar_axis_bid_success">Bid Success</string>
+    <string name="radar_axis_raw_points">Card Points</string>
+    <string name="radar_axis_aggression">Bid Boldness</string>
+    <string name="radar_axis_efficiency">Score Efficiency</string>
+    <string name="raw_points_comparison_title">Total Raw Card Points Collected Across Match</string>
+    <string name="raw_points_share_format">%1$s pts (%2$s%% of all table cards)</string>
+    <string name="raw_points_count_only">%1$s pts</string>
+    <string name="raw_points_percent_only">%1$s%% of table cards</string>
+
+    <string name="guide_toggle_label">Guide</string>
+    <string name="radar_guide_title">Radar Chart Metrics Guide</string>
+    <string name="radar_guide_win_rate_desc">Percentage of rounds where the team won the hand.</string>
+    <string name="radar_guide_bid_success_desc">Percentage of Hakem rounds where the team accomplished its contract or achieved Shelem.</string>
+    <string name="radar_guide_raw_points_desc">Share of total raw card points collected across all rounds (out of 165 per hand).</string>
+    <string name="radar_guide_aggression_desc">Bidding boldness based on the team\'s average contract bid between 100 and 165.</string>
+    <string name="radar_guide_efficiency_desc">Scoring efficiency: ratio of average final round score to the 165 base points.</string>
+
+    <string name="bid_distribution_title">Contract Bid Distribution</string>
+    <string name="bid_distribution_subtitle">Number of bids placed for each contract amount and their success rate</string>
+    <string name="bid_bracket_100_115">100 – 115</string>
+    <string name="bid_bracket_120_130">120 – 130</string>
+    <string name="bid_bracket_135_145">135 – 145</string>
+    <string name="bid_bracket_150_165">150 – Shelem</string>
+    <string name="bid_bracket_success_label">%1$s%% Made</string>
+    <string name="avg_bid_label">Avg Bid: %1$s</string>
+    <string name="max_bid_made_label">Highest Bid Made: %1$s</string>
+    <string name="bid_accuracy_overtrick">Avg Surplus Over Bid: %1$s</string>
+
+    <string name="player_stats_title">Individual Player Performance &amp; MVP</string>
+    <string name="player_stats_subtitle">Hakem count, contract success rate, average bid &amp; net score per player</string>
+    <string name="player_hakem_guide_title">What is Net Hakem Score?</string>
+    <string name="player_hakem_guide_desc">The sum of all points (positive or negative) earned by the player\'s team in rounds where this specific player was Hakem (accomplished contracts and Shelems minus failed bid penalties).</string>
+    <string name="mvp_hakem_badge">👑 Match MVP Hakem: %1$s</string>
+    <string name="mvp_hakem_desc">%1$s times Hakem, %2$s%% success rate &amp; %3$s net points as Hakem</string>
+    <string name="player_hakem_count">%1$s× Hakem</string>
+    <string name="player_avg_bid">Avg Bid: %1$s</string>
+    <string name="player_max_bid">Best Bid: %1$s</string>
+    <string name="player_net_hakem_score">Net as Hakem: %1$s</string>
+    <string name="player_success_rate">Success: %1$s%%</string>
+    <string name="player_no_hakem_yet">No Hakem turns yet</string>
+
+    <string name="records_highlights_title">Match Records &amp; Special Highlights</string>
+    <string name="records_highlights_subtitle">Notable milestones and records from this match</string>
+    <string name="record_biggest_fall_title">Biggest Penalty (Worst Fall)</string>
+    <string name="record_biggest_fall_val">Round %1$s (%2$s: %3$s pts)</string>
+    <string name="record_biggest_fall_none">Zero failed contracts so far! 🎉</string>
+    <string name="record_clutch_bid_title">Most Precise Clutch Bid</string>
+    <string name="record_clutch_bid_val">Round %1$s (%2$s: Bid %3$s, Took %4$s)</string>
+    <string name="record_clutch_bid_none">No accomplished contracts yet</string>
+    <string name="record_max_lead_title">Largest Score Lead Reached</string>
+    <string name="record_max_lead_val">%1$s pts lead by %2$s (Round %3$s)</string>
+    <string name="record_lucky_dealer_title">Luckiest Dealer on Table</string>
+    <string name="record_lucky_dealer_val">%1$s (Avg +%2$s for %3$s)</string>
+    <string name="record_rule_1000_blocks_title">1000+ Rule Blocks</string>
+    <string name="record_rule_1000_blocks_val">%1$s hands zeroed out by 1000+ Rule</string>
 </resources>

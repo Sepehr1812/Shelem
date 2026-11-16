@@ -590,6 +590,89 @@ class ExampleUnitTest {
     org.junit.Assert.assertTrue("CSV must have Ace In Ground column", csv.contains("Ace In Ground"))
     org.junit.Assert.assertTrue("CSV must have YES_ACE for round 1", csv.contains("YES_ACE"))
   }
+
+  @Test
+  fun comprehensiveGameStatisticsCalculator_computesPlayerMvpStreaksAndBrackets() {
+    val game = com.example.data.GameEntity(
+      id = 1,
+      team1Name = "شوالیه‌ها",
+      team2Name = "ستارگان",
+      team1Player1Name = "سپهر",
+      team1Player2Name = "علی",
+      team2Player1Name = "آرش",
+      team2Player2Name = "رضا",
+      targetScore = 1165,
+      winHandOnlyOver1000 = true,
+      trackAceInGround = true
+    )
+
+    val rounds = listOf(
+      RoundEntity(
+        id = 1,
+        gameId = 1,
+        roundNumber = 1,
+        hakemTeam = 1,
+        hakemPlayerName = "سپهر",
+        dealerPlayerName = "رضا",
+        bidAmount = 135,
+        team1CollectedRaw = 135,
+        team2CollectedRaw = 30,
+        team1FinalScore = 135,
+        team2FinalScore = 30,
+        status = "BidAccomplished",
+        isCompleted = true,
+        hasAceInGround = true
+      ),
+      RoundEntity(
+        id = 2,
+        gameId = 1,
+        roundNumber = 2,
+        hakemTeam = 1,
+        hakemPlayerName = "علی",
+        dealerPlayerName = "سپهر",
+        bidAmount = 165,
+        team1CollectedRaw = 165,
+        team2CollectedRaw = 0,
+        team1FinalScore = 330,
+        team2FinalScore = 0,
+        status = "Shelem",
+        isCompleted = true,
+        hasAceInGround = false
+      ),
+      RoundEntity(
+        id = 3,
+        gameId = 1,
+        roundNumber = 3,
+        hakemTeam = 2,
+        hakemPlayerName = "آرش",
+        dealerPlayerName = "علی",
+        bidAmount = 120,
+        team1CollectedRaw = 70,
+        team2CollectedRaw = 95,
+        team1FinalScore = 70,
+        team2FinalScore = -120,
+        status = "BidFailed",
+        isCompleted = true,
+        hasAceInGround = true
+      )
+    )
+
+    val stats = com.example.domain.GameStatisticsCalculator.calculate(game, rounds)
+    assertEquals(3, stats.totalCompletedRounds)
+    assertEquals(535, stats.team1TotalScore)
+    assertEquals(-90, stats.team2TotalScore)
+    assertEquals(3, stats.team1Wins)
+    assertEquals(0, stats.team2Wins)
+    assertEquals(3, stats.bestStreakCount)
+    assertEquals("شوالیه‌ها", stats.bestStreakTeamName)
+    assertEquals("علی", stats.mvpPlayer?.playerName)
+    assertEquals(-120, stats.biggestFallScore)
+    assertEquals(1, stats.clutchBidRoundNumber)
+    assertEquals(135, stats.clutchBidAmount)
+    assertEquals(listOf(120, 135, 165), stats.exactBidStats.map { it.bidAmount })
+    assertEquals(listOf(0, 100, 100), stats.exactBidStats.map { it.successRate })
+  }
 }
+
 
 

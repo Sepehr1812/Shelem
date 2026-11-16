@@ -1,6 +1,9 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +16,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,9 +26,8 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.Gavel
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.QueryStats
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,15 +35,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
@@ -50,17 +57,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.R
 import com.example.data.GameEntity
 import com.example.data.RoundEntity
+import com.example.domain.ComprehensiveGameStats
+import com.example.domain.GameStatisticsCalculator
+import com.example.ui.components.BidDistributionHistogramCard
+import com.example.ui.components.MatchRecordsAndHighlightsCard
+import com.example.ui.components.OutcomesDonutChartCard
+import com.example.ui.components.PlayerPerformanceLeaderboardCard
+import com.example.ui.components.RoundByRoundBarChart
 import com.example.ui.components.ScoreProgressionLineChart
+import com.example.ui.components.TeamComparisonRadarCard
 import com.example.ui.theme.EmeraldGreen
+import com.example.ui.theme.FeltGreenDark
+import com.example.ui.theme.FeltGreenPrimary
 import com.example.ui.theme.GoldAccent
 import com.example.ui.theme.PersianRed
 import com.example.util.PersianNumberHelper.formatScore
 import com.example.util.PersianNumberHelper.toPersianDigits
-import kotlin.math.roundToInt
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,86 +90,27 @@ fun GameStatisticsBottomSheet(
     modifier: Modifier = Modifier
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val completedRounds = rounds.filter { it.isCompleted && it.status != "Ongoing" }
-    val totalCompletedRounds = completedRounds.size
-
-    // 1. Highest score in a single round
-    val team1HighestRound = completedRounds.maxByOrNull { it.team1FinalScore }
-    val team2HighestRound = completedRounds.maxByOrNull { it.team2FinalScore }
-
-    val team1BestScore = team1HighestRound?.team1FinalScore ?: 0
-    val team2BestScore = team2HighestRound?.team2FinalScore ?: 0
-
-    val overallHighestScore: Int
-    val highestScoreTeamName: String
-    val highestScoreRoundNumber: Int
-
-    if (team1BestScore >= team2BestScore && team1HighestRound != null) {
-        overallHighestScore = team1BestScore
-        highestScoreTeamName = game.team1Name
-        highestScoreRoundNumber = team1HighestRound.roundNumber
-    } else if (team2HighestRound != null) {
-        overallHighestScore = team2BestScore
-        highestScoreTeamName = game.team2Name
-        highestScoreRoundNumber = team2HighestRound.roundNumber
-    } else {
-        overallHighestScore = 0
-        highestScoreTeamName = ""
-        highestScoreRoundNumber = 0
+    val completedRounds = remember(rounds) {
+        rounds.filter { it.isCompleted && it.status != "Ongoing" }
+    }
+    val stats = remember(game, rounds) {
+        GameStatisticsCalculator.calculate(game, rounds)
     }
 
-    // 2. Win / Loss Distribution
-    val team1Wins = completedRounds.count { it.team1FinalScore > it.team2FinalScore }
-    val team2Wins = completedRounds.count { it.team2FinalScore > it.team1FinalScore }
-    val tiedRounds = completedRounds.count { it.team1FinalScore == it.team2FinalScore }
-
-    val team1WinRate = if (totalCompletedRounds > 0) ((team1Wins.toFloat() / totalCompletedRounds) * 100).roundToInt() else 0
-    val team2WinRate = if (totalCompletedRounds > 0) ((team2Wins.toFloat() / totalCompletedRounds) * 100).roundToInt() else 0
-
-    // 3. Hakem / Bidding performance
-    val team1HakemRounds = completedRounds.filter { it.hakemTeam == 1 }
-    val team1SuccessfulBids = team1HakemRounds.count { it.status == "BidAccomplished" || it.status == "Shelem" }
-    val team1FailedBids = team1HakemRounds.count { it.status == "BidFailed" || it.status == "NegativeShelem" }
-
-    val team2HakemRounds = completedRounds.filter { it.hakemTeam == 2 }
-    val team2SuccessfulBids = team2HakemRounds.count { it.status == "BidAccomplished" || it.status == "Shelem" }
-    val team2FailedBids = team2HakemRounds.count { it.status == "BidFailed" || it.status == "NegativeShelem" }
-
-    // 4. Averages and Specials
-    val team1TotalScore = completedRounds.sumOf { it.team1FinalScore }
-    val team2TotalScore = completedRounds.sumOf { it.team2FinalScore }
-    val team1AvgScore = if (totalCompletedRounds > 0) (team1TotalScore.toDouble() / totalCompletedRounds).roundToInt() else 0
-    val team2AvgScore = if (totalCompletedRounds > 0) (team2TotalScore.toDouble() / totalCompletedRounds).roundToInt() else 0
-
-    val shelemsCount = completedRounds.count { it.status == "Shelem" || it.status == "NegativeShelem" }
-    val narasCount = completedRounds.count { it.isNaras }
-
-    // 5. Ace in Ground Stats
-    val aceRounds = completedRounds.filter { it.hasAceInGround }
-    val aceRoundsCount = aceRounds.size
-    val aceRoundsRatio = if (totalCompletedRounds > 0) ((aceRoundsCount.toFloat() / totalCompletedRounds) * 100).roundToInt() else 0
-
-    val aceTeam1Wins = aceRounds.count { it.team1FinalScore > it.team2FinalScore }
-    val aceTeam2Wins = aceRounds.count { it.team2FinalScore > it.team1FinalScore }
-    val aceTiedRounds = aceRounds.count { it.team1FinalScore == it.team2FinalScore }
-
-    val aceTeam1WinRate = if (aceRoundsCount > 0) ((aceTeam1Wins.toFloat() / aceRoundsCount) * 100).roundToInt() else 0
-    val aceTeam2WinRate = if (aceRoundsCount > 0) ((aceTeam2Wins.toFloat() / aceRoundsCount) * 100).roundToInt() else 0
-
-    val aceHakemAccomplished = aceRounds.count { it.status == "BidAccomplished" || it.status == "Shelem" }
-    val aceHakemSuccessRate = if (aceRoundsCount > 0) ((aceHakemAccomplished.toFloat() / aceRoundsCount) * 100).roundToInt() else 0
+    // 0 = All, 1 = Charts & Flow, 2 = Bidding & Hakem, 3 = Players MVP, 4 = Match Records
+    var selectedTab by remember { mutableIntStateOf(0) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         modifier = modifier.statusBarsPadding()
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(horizontal = 20.dp, vertical = 12.dp)
+                .padding(horizontal = 18.dp, vertical = 10.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -163,12 +122,14 @@ fun GameStatisticsBottomSheet(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.weight(1f)
                 ) {
                     Surface(
-                        color = GoldAccent.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.size(40.dp)
+                        color = GoldAccent.copy(alpha = 0.18f),
+                        shape = RoundedCornerShape(14.dp),
+                        border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.4f)),
+                        modifier = Modifier.size(44.dp)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
@@ -183,7 +144,7 @@ fun GameStatisticsBottomSheet(
                         Text(
                             text = stringResource(R.string.game_statistics_title),
                             style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.ExtraBold
                         )
                         Text(
                             text = stringResource(R.string.game_statistics_desc),
@@ -215,29 +176,29 @@ fun GameStatisticsBottomSheet(
                 }
             }
 
-            HorizontalDivider()
+            HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.15f))
 
-            if (totalCompletedRounds == 0) {
-                // Empty state
+            if (stats.totalCompletedRounds == 0) {
+                // Empty State Card
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 16.dp),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(20.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(24.dp),
+                            .padding(28.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.BarChart,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.outline,
-                            modifier = Modifier.size(48.dp)
+                            tint = GoldAccent,
+                            modifier = Modifier.size(52.dp)
                         )
                         Text(
                             text = stringResource(R.string.highest_round_empty),
@@ -254,365 +215,191 @@ fun GameStatisticsBottomSheet(
                     }
                 }
             } else {
-                // Top KPI Summary Cards
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // KPI 1: Total Rounds
-                    StatKpiCard(
-                        title = stringResource(R.string.total_rounds_played),
-                        value = totalCompletedRounds.toPersianDigits(),
-                        subtitle = stringResource(R.string.rounds_count_format, totalCompletedRounds.toPersianDigits()),
-                        icon = Icons.Default.BarChart,
-                        accentColor = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    // KPI 2: Highest Score in single round
-                    StatKpiCard(
-                        title = stringResource(R.string.highest_single_round_score),
-                        value = formatScore(overallHighestScore),
-                        subtitle = if (overallHighestScore > 0) {
-                            stringResource(
-                                R.string.highest_round_detail,
-                                highestScoreRoundNumber.toPersianDigits(),
-                                highestScoreTeamName,
-                                overallHighestScore.toPersianDigits()
-                            )
-                        } else {
-                            stringResource(R.string.highest_round_empty)
-                        },
-                        icon = Icons.Default.EmojiEvents,
-                        accentColor = GoldAccent,
-                        modifier = Modifier.weight(1.3f)
-                    )
-                }
-
-                // Cumulative Score Progression Line Chart
-                ScoreProgressionLineChart(
+                // 1. Hero Scoreboard & Target Progress Card
+                StatisticsHeroBanner(
                     game = game,
-                    rounds = completedRounds
+                    stats = stats
                 )
 
-                // Section 1: Win / Loss Distribution
-                Card(
+                // 2. 4-Card KPI Bento Grid
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        StatKpiCard(
+                            title = stringResource(R.string.total_rounds_played),
+                            value = stats.totalCompletedRounds.toPersianDigits(),
+                            subtitle = stringResource(
+                                R.string.rounds_count_format,
+                                stats.totalCompletedRounds.toPersianDigits()
+                            ),
+                            icon = Icons.Default.BarChart,
+                            accentColor = EmeraldGreen,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        StatKpiCard(
+                            title = stringResource(R.string.highest_single_round_score),
+                            value = formatScore(stats.overallHighestScore),
+                            subtitle = if (stats.overallHighestScore > 0) {
+                                stringResource(
+                                    R.string.highest_round_detail,
+                                    stats.highestScoreRoundNumber.toPersianDigits(),
+                                    stats.highestScoreTeamName
+                                )
+                            } else {
+                                stringResource(R.string.highest_round_empty)
+                            },
+                            icon = Icons.Default.EmojiEvents,
+                            accentColor = GoldAccent,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        StatKpiCard(
+                            title = stringResource(R.string.stat_kpi_hakem_rate),
+                            value = "${stats.overallHakemSuccessRate.toPersianDigits()}%",
+                            subtitle = "${stringResource(R.string.stat_kpi_avg_bid)}: ${stats.overallAvgBid.toPersianDigits()}",
+                            icon = Icons.Default.Gavel,
+                            accentColor = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.weight(1f)
+                        )
+
+                        StatKpiCard(
+                            title = stringResource(R.string.stat_kpi_win_streak),
+                            value = stringResource(
+                                R.string.stat_kpi_streak_value,
+                                stats.bestStreakCount.toPersianDigits()
+                            ),
+                            subtitle = stats.bestStreakTeamName,
+                            icon = Icons.Default.LocalFireDepartment,
+                            accentColor = Color(0xFFFF6D00),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+
+                // 3. Category Filter Pills Row
+                val showAceStats = game.trackAceInGround || stats.aceRoundsCount > 0
+                val allLabel = stringResource(R.string.stat_tab_all)
+                val chartsLabel = stringResource(R.string.stat_tab_charts)
+                val biddingLabel = stringResource(R.string.stat_tab_bidding)
+                val playersLabel = stringResource(R.string.stat_tab_players)
+                val recordsLabel = stringResource(R.string.stat_tab_records)
+                val aceLabel = stringResource(R.string.stat_tab_ace)
+
+                val tabs = remember(showAceStats, allLabel, chartsLabel, biddingLabel, playersLabel, recordsLabel, aceLabel) {
+                    buildList {
+                        add(0 to allLabel)
+                        add(1 to chartsLabel)
+                        add(2 to biddingLabel)
+                        add(3 to playersLabel)
+                        add(4 to recordsLabel)
+                        if (showAceStats) {
+                            add(5 to aceLabel)
+                        }
+                    }
+                }
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("stat_win_loss_card"),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.TrendingUp,
-                                contentDescription = null,
-                                tint = EmeraldGreen,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.win_loss_distribution),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        // Split Distribution Bar
-                        val t1Ratio = if (totalCompletedRounds > 0) team1Wins.toFloat() / totalCompletedRounds else 0.5f
-                        val t2Ratio = if (totalCompletedRounds > 0) team2Wins.toFloat() / totalCompletedRounds else 0.5f
-
-                        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(14.dp)
-                                    .clip(RoundedCornerShape(7.dp))
-                                    .background(MaterialTheme.colorScheme.surface)
-                            ) {
-                                if (team1Wins > 0) {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(team1Wins.toFloat())
-                                            .fillMaxHeight()
-                                            .background(EmeraldGreen)
-                                    )
-                                }
-                                if (tiedRounds > 0) {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(tiedRounds.toFloat())
-                                            .fillMaxHeight()
-                                            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
-                                    )
-                                }
-                                if (team2Wins > 0) {
-                                    Box(
-                                        modifier = Modifier
-                                            .weight(team2Wins.toFloat())
-                                            .fillMaxHeight()
-                                            .background(GoldAccent)
-                                    )
-                                }
-                            }
-
-                            // Legends & Exact Numbers
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // Team 1
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .background(EmeraldGreen, CircleShape)
-                                    )
-                                    Text(
-                                        text = stringResource(
-                                            R.string.win_rate_format,
-                                            stringResource(R.string.team1_wins_label, game.team1Name),
-                                            team1WinRate.toPersianDigits()
-                                        ) + " (${team1Wins.toPersianDigits()})",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
-
-                                // Team 2
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(10.dp)
-                                            .background(GoldAccent, CircleShape)
-                                    )
-                                    Text(
-                                        text = stringResource(
-                                            R.string.win_rate_format,
-                                            stringResource(R.string.team2_wins_label, game.team2Name),
-                                            team2WinRate.toPersianDigits()
-                                        ) + " (${team2Wins.toPersianDigits()})",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                }
-                            }
-
-                            if (tiedRounds > 0) {
-                                Text(
-                                    text = "${stringResource(R.string.ties_label)}: ${tiedRounds.toPersianDigits()}",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Section 2: Highest Round Comparison for Both Teams
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Star,
-                                contentDescription = null,
-                                tint = GoldAccent,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.highest_single_round_score),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            // Team 1 Best
-                            TeamBestRoundItem(
-                                teamName = game.team1Name,
-                                roundNumber = team1HighestRound?.roundNumber ?: 0,
-                                score = team1BestScore,
-                                status = team1HighestRound?.status,
-                                color = EmeraldGreen,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            // Team 2 Best
-                            TeamBestRoundItem(
-                                teamName = game.team2Name,
-                                roundNumber = team2HighestRound?.roundNumber ?: 0,
-                                score = team2BestScore,
-                                status = team2HighestRound?.status,
-                                color = GoldAccent,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-
-                // Section 3: Bidding & Hakemi Performance
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Gavel,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Text(
-                                text = stringResource(R.string.bidding_performance),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            // Team 1 Hakem Stats
-                            HakemPerformanceItem(
-                                teamName = game.team1Name,
-                                totalBids = team1HakemRounds.size,
-                                successfulBids = team1SuccessfulBids,
-                                failedBids = team1FailedBids,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            // Team 2 Hakem Stats
-                            HakemPerformanceItem(
-                                teamName = game.team2Name,
-                                totalBids = team2HakemRounds.size,
-                                successfulBids = team2SuccessfulBids,
-                                failedBids = team2FailedBids,
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
-                    }
-                }
-
-                // Section 4: Averages & Special Highlights
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // Average per Round
-                    Card(
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(14.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                    tabs.forEach { (tabId, label) ->
+                        val selected = selectedTab == tabId
+                        Surface(
+                            color = if (selected) GoldAccent else MaterialTheme.colorScheme.surfaceVariant,
+                            shape = RoundedCornerShape(12.dp),
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = if (selected) GoldAccent else MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+                            ),
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable { selectedTab = tabId }
+                                .testTag("stat_tab_chip_$tabId")
                         ) {
                             Text(
-                                text = stringResource(R.string.average_score_title),
+                                text = label,
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "${game.team1Name}: ${formatScore(team1AvgScore)}",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Text(
-                                text = "${game.team2Name}: ${formatScore(team2AvgScore)}",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-
-                    // Special Events (Shelem & Naras)
-                    Card(
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(14.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.special_events_title),
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = stringResource(R.string.shelems_count, shelemsCount.toPersianDigits()),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = if (shelemsCount > 0) GoldAccent else MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = stringResource(R.string.naras_count, narasCount.toPersianDigits()),
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.SemiBold
+                                color = if (selected) FeltGreenDark else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
                             )
                         }
                     }
                 }
 
-                // Section 5: Ace in Ground Statistics
-                if (game.trackAceInGround || aceRoundsCount > 0) {
+                // --- SECTION A: Cumulative Line Chart & Round-by-Round Bar Chart ---
+                if (selectedTab == 0 || selectedTab == 1) {
+                    ScoreProgressionLineChart(
+                        game = game,
+                        rounds = completedRounds
+                    )
+
+                    RoundByRoundBarChart(
+                        game = game,
+                        rounds = completedRounds
+                    )
+                }
+
+                // --- SECTION B: Donut Chart (Contract Outcomes & Win Share) + Radar Chart ---
+                if (selectedTab == 0 || selectedTab == 1 || selectedTab == 2) {
+                    OutcomesDonutChartCard(
+                        game = game,
+                        stats = stats
+                    )
+                }
+
+                if (selectedTab == 0 || selectedTab == 1) {
+                    TeamComparisonRadarCard(
+                        game = game,
+                        stats = stats
+                    )
+                }
+
+                // --- SECTION C: Bid Distribution Histogram & Hakem Performance ---
+                if (selectedTab == 0 || selectedTab == 2) {
+                    BidDistributionHistogramCard(
+                        game = game,
+                        stats = stats
+                    )
+                }
+
+                // --- SECTION D: Individual Player Performance Leaderboard & MVP ---
+                if (selectedTab == 0 || selectedTab == 3) {
+                    PlayerPerformanceLeaderboardCard(
+                        stats = stats
+                    )
+                }
+
+                // --- SECTION E: Match Records & Highlights ---
+                if (selectedTab == 0 || selectedTab == 4) {
+                    MatchRecordsAndHighlightsCard(
+                        game = game,
+                        stats = stats
+                    )
+                }
+
+                // --- SECTION F: Ace in Ground Dedicated Section ---
+                if (showAceStats && (selectedTab == 0 || selectedTab == 5)) {
                     AceInGroundStatisticsCard(
                         game = game,
-                        totalCompletedRounds = totalCompletedRounds,
-                        aceRoundsCount = aceRoundsCount,
-                        aceRoundsRatio = aceRoundsRatio,
-                        aceTeam1Wins = aceTeam1Wins,
-                        aceTeam2Wins = aceTeam2Wins,
-                        aceTiedRounds = aceTiedRounds,
-                        aceTeam1WinRate = aceTeam1WinRate,
-                        aceTeam2WinRate = aceTeam2WinRate,
-                        aceHakemAccomplished = aceHakemAccomplished,
-                        aceHakemSuccessRate = aceHakemSuccessRate
+                        totalCompletedRounds = stats.totalCompletedRounds,
+                        aceRoundsCount = stats.aceRoundsCount,
+                        aceRoundsRatio = stats.aceRoundsRatio,
+                        aceTeam1Wins = stats.aceTeam1Wins,
+                        aceTeam2Wins = stats.aceTeam2Wins,
+                        aceTeam1WinRate = stats.aceTeam1WinRate,
+                        aceTeam2WinRate = stats.aceTeam2WinRate,
+                        aceHakemAccomplished = stats.aceHakemAccomplished,
+                        aceHakemSuccessRate = stats.aceHakemSuccessRate
                     )
                 }
             }
@@ -624,12 +411,229 @@ fun GameStatisticsBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("dismiss_statistics_button"),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Text(
                     text = stringResource(R.string.close),
                     fontWeight = FontWeight.Bold
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StatisticsHeroBanner(
+    game: GameEntity,
+    stats: ComprehensiveGameStats
+) {
+    val scoreDiff = abs(stats.team1TotalScore - stats.team2TotalScore)
+    val leadingTeam = when {
+        stats.team1TotalScore > stats.team2TotalScore -> game.team1Name
+        stats.team2TotalScore > stats.team1TotalScore -> game.team2Name
+        else -> null
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(22.dp),
+        border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.45f)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            FeltGreenDark,
+                            FeltGreenPrimary
+                        )
+                    )
+                )
+                .padding(16.dp)
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.stat_hero_live_score,
+                            stats.totalCompletedRounds.toPersianDigits()
+                        ),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color.White.copy(alpha = 0.85f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Surface(
+                        color = GoldAccent.copy(alpha = 0.2f),
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.5f))
+                    ) {
+                        Text(
+                            text = if (leadingTeam != null) {
+                                stringResource(
+                                    R.string.stat_hero_leading_team,
+                                    leadingTeam,
+                                    scoreDiff.toPersianDigits()
+                                )
+                            } else {
+                                stringResource(R.string.stat_hero_tied_game)
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = GoldAccent,
+                            maxLines = 1,
+                            softWrap = false,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+
+                // Scores Comparison Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = game.team1Name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "${game.team1Player1Name} • ${game.team1Player2Name}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White.copy(alpha = 0.7f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = formatScore(stats.team1TotalScore),
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Black,
+                            color = if (stats.team1TotalScore < 0) Color(0xFFFF8A80) else Color(0xFF69F0AE)
+                        )
+                    }
+
+                    Surface(
+                        color = Color.White.copy(alpha = 0.1f),
+                        shape = CircleShape,
+                        modifier = Modifier.size(38.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "VS",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Black,
+                                color = GoldAccent
+                            )
+                        }
+                    }
+
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(
+                            text = game.team2Name,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Text(
+                            text = "${game.team2Player1Name} • ${game.team2Player2Name}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White.copy(alpha = 0.7f),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = formatScore(stats.team2TotalScore),
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Black,
+                            color = if (stats.team2TotalScore < 0) Color(0xFFFF8A80) else GoldAccent
+                        )
+                    }
+                }
+
+                // Target Score Progress Bars
+                val t1Effective = maxOf(stats.team1TotalScore, stats.team1TotalScore - stats.team2TotalScore).coerceAtLeast(0)
+                val t2Effective = maxOf(stats.team2TotalScore, stats.team2TotalScore - stats.team1TotalScore).coerceAtLeast(0)
+                val p1 = (t1Effective.toFloat() / game.targetScore.coerceAtLeast(1)).coerceIn(0f, 1f)
+                val p2 = (t2Effective.toFloat() / game.targetScore.coerceAtLeast(1)).coerceIn(0f, 1f)
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${(p1 * 100).toInt().toPersianDigits()}%",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF69F0AE)
+                        )
+                        Text(
+                            text = stringResource(
+                                R.string.stat_hero_target_progress,
+                                game.targetScore.toPersianDigits()
+                            ),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White.copy(alpha = 0.75f),
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 8.dp)
+                        )
+                        Text(
+                            text = "${(p2 * 100).toInt().toPersianDigits()}%",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = GoldAccent
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        LinearProgressIndicator(
+                            progress = { p1 },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(7.dp)
+                                .clip(RoundedCornerShape(4.dp)),
+                            color = Color(0xFF69F0AE),
+                            trackColor = Color.White.copy(alpha = 0.15f)
+                        )
+                        LinearProgressIndicator(
+                            progress = { p2 },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(7.dp)
+                                .clip(RoundedCornerShape(4.dp)),
+                            color = GoldAccent,
+                            trackColor = Color.White.copy(alpha = 0.15f)
+                        )
+                    }
+                }
             }
         }
     }
@@ -646,8 +650,9 @@ private fun StatKpiCard(
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.75f)),
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.22f))
     ) {
         Column(
             modifier = Modifier.padding(14.dp),
@@ -657,116 +662,43 @@ private fun StatKpiCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = accentColor,
-                    modifier = Modifier.size(18.dp)
-                )
+                Surface(
+                    color = accentColor.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.size(26.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = accentColor,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.Medium,
-                    maxLines = 1
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             Text(
                 text = value,
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Black,
-                color = accentColor
+                color = accentColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1
-            )
-        }
-    }
-}
-
-@Composable
-private fun TeamBestRoundItem(
-    teamName: String,
-    roundNumber: Int,
-    score: Int,
-    status: String?,
-    color: Color,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surface
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = teamName,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-            Text(
-                text = formatScore(score),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.ExtraBold,
-                color = if (score > 0) EmeraldGreen else if (score < 0) PersianRed else MaterialTheme.colorScheme.onSurface
-            )
-            if (roundNumber > 0) {
-                Text(
-                    text = stringResource(R.string.round_number, roundNumber.toPersianDigits()),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun HakemPerformanceItem(
-    teamName: String,
-    totalBids: Int,
-    successfulBids: Int,
-    failedBids: Int,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surface
-    ) {
-        Column(
-            modifier = Modifier.padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = teamName,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "${stringResource(R.string.successful_bids)}: ${successfulBids.toPersianDigits()}",
-                style = MaterialTheme.typography.bodySmall,
-                color = EmeraldGreen,
-                fontWeight = FontWeight.SemiBold
-            )
-            Text(
-                text = "${stringResource(R.string.failed_bids)}: ${failedBids.toPersianDigits()}",
-                style = MaterialTheme.typography.bodySmall,
-                color = PersianRed,
-                fontWeight = FontWeight.SemiBold
-            )
-            val successRate = if (totalBids > 0) ((successfulBids.toFloat() / totalBids) * 100).roundToInt() else 0
-            Text(
-                text = "${stringResource(R.string.bid_prefix)}${totalBids.toPersianDigits()} (${successRate.toPersianDigits()}%)",
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.outline
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
@@ -780,7 +712,6 @@ private fun AceInGroundStatisticsCard(
     aceRoundsRatio: Int,
     aceTeam1Wins: Int,
     aceTeam2Wins: Int,
-    aceTiedRounds: Int,
     aceTeam1WinRate: Int,
     aceTeam2WinRate: Int,
     aceHakemAccomplished: Int,
@@ -791,8 +722,9 @@ private fun AceInGroundStatisticsCard(
         modifier = modifier
             .fillMaxWidth()
             .testTag("stat_ace_card"),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
     ) {
         Column(
             modifier = Modifier
@@ -806,8 +738,8 @@ private fun AceInGroundStatisticsCard(
             ) {
                 Surface(
                     color = GoldAccent.copy(alpha = 0.15f),
-                    shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.size(32.dp)
+                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier.size(36.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
@@ -847,12 +779,10 @@ private fun AceInGroundStatisticsCard(
                     )
                 }
             } else {
-                // KPIs for Ace in ground
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    // KPI 1: دست‌های دارای تک
                     Surface(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
@@ -886,7 +816,6 @@ private fun AceInGroundStatisticsCard(
                         }
                     }
 
-                    // KPI 2: برد حاکم در دست‌های تک‌دار
                     Surface(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(12.dp),
@@ -921,7 +850,6 @@ private fun AceInGroundStatisticsCard(
                     }
                 }
 
-                // Team Performance Distribution Bar
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
                         text = stringResource(R.string.ace_team_performance_title),
@@ -944,14 +872,6 @@ private fun AceInGroundStatisticsCard(
                                     .background(EmeraldGreen)
                             )
                         }
-                        if (aceTiedRounds > 0) {
-                            Box(
-                                modifier = Modifier
-                                    .weight(aceTiedRounds.toFloat())
-                                    .fillMaxHeight()
-                                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
-                            )
-                        }
                         if (aceTeam2Wins > 0) {
                             Box(
                                 modifier = Modifier
@@ -962,7 +882,6 @@ private fun AceInGroundStatisticsCard(
                         }
                     }
 
-                    // Team breakdown labels
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -1017,4 +936,3 @@ private fun AceInGroundStatisticsCard(
         }
     }
 }
-

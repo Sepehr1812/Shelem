@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.res.ResourcesCompat
 import com.example.R
 import com.example.data.GameEntity
 import com.example.data.RoundEntity
@@ -309,12 +311,16 @@ fun ScoreProgressionLineChart(
             }
 
             // Canvas Chart
+            val context = LocalContext.current
+            val vazirTypeface = remember(context) {
+                runCatching { ResourcesCompat.getFont(context, R.font.vazir_regular) }.getOrNull()
+            }
             val outlineColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
             val textColor = MaterialTheme.colorScheme.onSurfaceVariant
             val surfaceColor = MaterialTheme.colorScheme.surface
             val primaryColor = MaterialTheme.colorScheme.primary
             val onSurfaceColor = MaterialTheme.colorScheme.onSurface
-            val textPaint = remember(textColor) {
+            val textPaint = remember(textColor, vazirTypeface) {
                 android.graphics.Paint().apply {
                     color = android.graphics.Color.argb(
                         (textColor.alpha * 255).toInt(),
@@ -325,6 +331,7 @@ fun ScoreProgressionLineChart(
                     textSize = 28f
                     isAntiAlias = true
                     textAlign = android.graphics.Paint.Align.CENTER
+                    vazirTypeface?.let { typeface = it }
                 }
             }
 
@@ -562,7 +569,7 @@ fun ScoreProgressionLineChart(
                         )
 
                         // X-axis Round Number labels
-                        val label = if (pt.roundNumber == 0) "0" else pt.roundNumber.toPersianDigits()
+                        val label = pt.roundNumber.toPersianDigits()
                         drawContext.canvas.nativeCanvas.drawText(
                             label,
                             x,

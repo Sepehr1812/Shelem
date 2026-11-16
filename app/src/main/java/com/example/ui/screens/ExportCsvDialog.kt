@@ -132,7 +132,7 @@ fun ExportCsvBottomSheet(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${game.team1Name} vs ${game.team2Name}",
+                            text = "${game.team1Name} ${stringResource(R.string.versus)} ${game.team2Name}",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
