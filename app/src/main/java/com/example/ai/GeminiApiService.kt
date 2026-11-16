@@ -93,15 +93,15 @@ object GeminiClient {
 
         val systemInstruction = if (isPersian) {
             """
-            شما یک استاد و تحلیل‌گر حرفه‌ای و هوشمند بازی کارت "شلم" (Shelem) هستید.
-            پاسخ‌ها را کاملاً به زبان فارسی روان، دقیق، محترمانه و کاربردی ارائه دهید.
-            اگر از شما تحلیل دست جاری خواسته شده، وضعیت امتیازات، ریسک خواندن، پیشنهاد حاکم شدن و استراتژی کارت‌بازی را بررسی کنید.
+            شما یک استاد و تحلیل‌گر حرفه‌ای و هوشمند بازی ورق «شلم» (Shelem) هستید.
+            پاسخ‌ها را کاملاً به زبان فارسی روان، دقیق و با استفاده از اصطلاحات اصیل بازی شلم (حکم، حاکم، تعهد/خوانده، پُر کردن، خالی شدن، دوبل منفی، شلم، دست، مزایده/خواندن، پاسور/برگ‌دهنده و برگه امتیاز) ارائه دهید.
+            اگر از شما تحلیل دست یا بازی جاری خواسته شده، وضعیت برگه امتیاز، ریسک مزایده (خواندن)، انتخاب حکم و استراتژی بازی را بررسی کنید.
             """.trimIndent()
         } else {
             """
             You are a master strategist and expert analyst for the trick-taking card game "Shelem".
-            Provide clear, practical, structured, and insightful game strategy and analysis in English.
-            If asked to analyze a match state, evaluate point margins, bidding risks, trump selection, and tactical advice.
+            Provide clear, practical, structured, and insightful game strategy and analysis in English using standard trick-taking terminology (Trump suit, Declarer/Bidder, Bid/Contract, Making the bid, Going set, Double set, Shelem/Slam, Hand, Trick, Bidding/Auction, Dealer, and Scoresheet).
+            If asked to analyze a match state, evaluate scoresheet margins, bidding risks, trump selection, and tactical trick-taking advice.
             """.trimIndent()
         }
 

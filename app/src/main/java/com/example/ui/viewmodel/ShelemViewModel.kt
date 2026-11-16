@@ -233,40 +233,40 @@ class ShelemViewModel(application: Application) : AndroidViewModel(application) 
 
                     if (isPersian) {
                         val lastRoundInfo = if (lastRound != null) {
-                            "دست قبلی: حاکم=${lastRound.hakemPlayerName}، بید=${lastRound.bidAmount.toPersianDigits()}، امتیاز نهایی تیم ۱=${lastRound.team1FinalScore.toPersianDigits()}، تیم ۲=${lastRound.team2FinalScore.toPersianDigits()} (${lastRound.status})"
+                            "دست قبلی: حاکم=${lastRound.hakemPlayerName}، تعهد (خوانده)=${lastRound.bidAmount.toPersianDigits()}، پاسور=${lastRound.dealerPlayerName}، امتیاز دست تیم ۱=${lastRound.team1FinalScore.toPersianDigits()}، تیم ۲=${lastRound.team2FinalScore.toPersianDigits()} (${lastRound.status})"
                         } else "هنوز دستی بازی نشده است."
 
                         """
-                        تحلیل سریع بازی جاری شلم:
-                        - نام تیم ۱: ${game.team1Name} (بازیکنان: ${game.team1Player1Name}, ${game.team1Player2Name}) - امتیاز کل: ${t1Total.toPersianDigits()}
-                        - نام تیم ۲: ${game.team2Name} (بازیکنان: ${game.team2Player1Name}, ${game.team2Player2Name}) - امتیاز کل: ${t2Total.toPersianDigits()}
+                        تحلیل سریع برگه امتیاز بازی جاری شلم:
+                        - نام تیم ۱: ${game.team1Name} (بازیکنان: ${game.team1Player1Name}، ${game.team1Player2Name}) - مجموع امتیاز: ${t1Total.toPersianDigits()}
+                        - نام تیم ۲: ${game.team2Name} (بازیکنان: ${game.team2Player1Name}، ${game.team2Player2Name}) - مجموع امتیاز: ${t2Total.toPersianDigits()}
                         - امتیاز هدف بازی: ${game.targetScore.toPersianDigits()}
-                        - تعداد دست‌های بازی شده: ${rounds.size.toPersianDigits()}
+                        - تعداد دست‌های بازی‌شده: ${rounds.size.toPersianDigits()}
                         - $lastRoundInfo
 
-                        لطفاً وضعیت فعلی بازی را تحلیل کنید، پیشنهاد بدهید کدام تیم نیاز به ریسک دارد و استراتژی پیشنهاد بیدینگ (خوانده) بعدی چیست.
+                        لطفاً وضعیت فعلی بازی را تحلیل کنید، مشخص کنید کدام تیم در مزایده (خواندن) بعدی نیاز به ریسک دارد و استراتژی پیشنهادی برای حاکم شدن، تعیین حکم و پُر کردن تعهد یا خالی کردن حریف چیست.
                         """.trimIndent()
                     } else {
                         val lastRoundInfo = if (lastRound != null) {
-                            "Previous round: Hakem=${lastRound.hakemPlayerName}, Bid=${lastRound.bidAmount}, Final score Team 1=${lastRound.team1FinalScore}, Team 2=${lastRound.team2FinalScore} (${lastRound.status})"
-                        } else "No rounds played yet."
+                            "Previous hand: Declarer=${lastRound.hakemPlayerName}, Bid (Contract)=${lastRound.bidAmount}, Dealer=${lastRound.dealerPlayerName}, Hand score Team 1=${lastRound.team1FinalScore}, Team 2=${lastRound.team2FinalScore} (${lastRound.status})"
+                        } else "No hands played yet."
 
                         """
-                        Quick Shelem match analysis:
+                        Quick Shelem scoresheet analysis:
                         - Team 1: ${game.team1Name} (Players: ${game.team1Player1Name}, ${game.team1Player2Name}) - Total Score: $t1Total
                         - Team 2: ${game.team2Name} (Players: ${game.team2Player1Name}, ${game.team2Player2Name}) - Total Score: $t2Total
                         - Target Score: ${game.targetScore}
-                        - Completed Rounds: ${rounds.size}
+                        - Completed Hands: ${rounds.size}
                         - $lastRoundInfo
 
-                        Please analyze the current match state, advise which team needs to take risks, and provide recommended bidding and trump strategy for the next round.
+                        Please analyze the current match state, advise which team needs to bid aggressively in the next auction, and recommend strategies for making the bid, choosing the trump suit, or setting the opponent.
                         """.trimIndent()
                     }
                 } else {
                     if (isPersian) {
-                        "لطفاً استراتژی عمومی خواندن (بیدینگ)، انتخاب حکم، و بازی شلم را توضیح دهید."
+                        "لطفاً استراتژی اصولی مزایده (خواندن)، انتخاب خال حکم، پُر کردن تعهد و خالی کردن حریف در بازی شلم را توضیح دهید."
                     } else {
-                        "Please explain general Shelem strategies including bidding, trump suit selection, and high-level card play tactics."
+                        "Please explain core Shelem strategies including bidding (auction), trump suit selection, making the bid, and setting the declarer."
                     }
                 }
             } else {
