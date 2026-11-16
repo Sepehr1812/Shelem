@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-  namespace = "com.example"
+  namespace = "com.shelem.scoresheet"
   compileSdk = 37
 
   defaultConfig {
-    applicationId = "com.aistudio.shelem.scorecounter"
+    applicationId = "com.shelem.scoresheet"
     minSdk = 24
     targetSdk = 37
     versionCode = 1
