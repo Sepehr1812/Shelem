@@ -321,4 +321,17 @@
     <string name="record_lucky_dealer_val">%1$s (میانگین +%2$s امتیاز برای %3$s)</string>
     <string name="record_rule_1000_blocks_title">توقف‌های قانون +۱۰۰۰</string>
     <string name="record_rule_1000_blocks_val">%1$s دست صفرشده با قانون +۱۰۰۰</string>
+
+    <!-- Navigation Drawer & Bug Report -->
+    <string name="open_navigation_drawer">باز کردن منو</string>
+    <string name="drawer_subtitle">دستیار حرفه‌ای امتیازشماری شلم</string>
+    <string name="drawer_toggle_theme">تغییر تم</string>
+    <string name="drawer_theme_dark">تاریک</string>
+    <string name="drawer_theme_light">روشن</string>
+    <string name="drawer_toggle_language">تغییر زبان</string>
+    <string name="drawer_github_repo">مخزن گیت‌هاب</string>
+    <string name="drawer_report_bug">گزارش خطا</string>
+    <string name="app_version_format">نسخه %1$s</string>
+    <string name="bug_report_email_subject">گزارش خطا در اپلیکیشن شلم!</string>
+    <string name="bug_report_email_body">سلام،\n\nهنگام استفاده از برنامه شلم با خطای زیر مواجه شدم:\n[لطفاً شرح خطا را اینجا بنویسید]\n\n---\nنسخه اپلیکیشن: %1$s\n</string>
 </resources>

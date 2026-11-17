@@ -321,4 +321,17 @@
     <string name="record_lucky_dealer_val">%1$s (Avg +%2$s pts for %3$s)</string>
     <string name="record_rule_1000_blocks_title">1000+ Rule Blocks</string>
     <string name="record_rule_1000_blocks_val">%1$s hands zeroed out by 1000+ Rule</string>
+
+    <!-- Navigation Drawer & Bug Report -->
+    <string name="open_navigation_drawer">Open Menu</string>
+    <string name="drawer_subtitle">Smart &amp; Professional Shelem Scorekeeper</string>
+    <string name="drawer_toggle_theme">Change Theme</string>
+    <string name="drawer_theme_dark">Dark</string>
+    <string name="drawer_theme_light">Light</string>
+    <string name="drawer_toggle_language">Change Language</string>
+    <string name="drawer_github_repo">GitHub Repository</string>
+    <string name="drawer_report_bug">Report a Bug</string>
+    <string name="app_version_format">Version %1$s</string>
+    <string name="bug_report_email_subject">Shelem! App - Bug Report</string>
+    <string name="bug_report_email_body">Hello,\n\nI encountered the following bug while using the Shelem! app:\n[Please describe the issue here]\n\n---\nApp Version: %1$s\n</string>
 </resources>

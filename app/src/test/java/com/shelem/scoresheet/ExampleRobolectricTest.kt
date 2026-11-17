@@ -55,4 +55,26 @@ class ExampleRobolectricTest {
         assertEquals("مشاهده برگه امتیاز", faContext.getString(R.string.view_game_results))
         assertEquals("مزایده و حاکم", faContext.getString(R.string.stat_tab_bidding))
     }
+
+    @Test
+    fun `bug report email intent has localized subject and app version in body`() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+
+        val faIntent = com.shelem.scoresheet.ui.screens.buildBugReportEmailIntent(context, isPersian = true)
+        val faSubject = faIntent.getStringExtra(android.content.Intent.EXTRA_SUBJECT) ?: ""
+        val faBody = faIntent.getStringExtra(android.content.Intent.EXTRA_TEXT) ?: ""
+        assertEquals("گزارش خطا در اپلیکیشن شلم!", faSubject)
+        assertTrue(faBody.contains("نسخه اپلیکیشن: ۱.۰"))
+
+        val enIntent = com.shelem.scoresheet.ui.screens.buildBugReportEmailIntent(context, isPersian = false)
+        val enSubject = enIntent.getStringExtra(android.content.Intent.EXTRA_SUBJECT) ?: ""
+        val enBody = enIntent.getStringExtra(android.content.Intent.EXTRA_TEXT) ?: ""
+        assertEquals("Shelem! App - Bug Report", enSubject)
+        assertTrue(enBody.contains("App Version: 1.0"))
+
+        assertEquals(
+            "https://github.com/Sepehr1812/Shelem",
+            com.shelem.scoresheet.ui.screens.GITHUB_REPO_URL
+        )
+    }
 }
