@@ -5,6 +5,11 @@ plugins {
   alias(libs.plugins.roborazzi)
 }
 
+kotlin {
+
+  jvmToolchain(17)
+}
+
 android {
   namespace = "com.shelem.scoresheet"
   compileSdk = 37
@@ -20,43 +25,30 @@ android {
   }
 
   signingConfigs {
+
     create("release") {
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
-      storeFile = file(keystorePath)
-      storePassword = System.getenv("STORE_PASSWORD")
-      keyAlias = "upload"
-      keyPassword = System.getenv("KEY_PASSWORD")
-      enableV2Signing = true
-      enableV3Signing = true
-      enableV4Signing = true
-    }
-    create("debugConfig") {
-      storeFile = file("${rootDir}/debug.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
-      enableV2Signing = true
+
       enableV3Signing = true
       enableV4Signing = true
     }
   }
 
   buildTypes {
+
     release {
-      isCrunchPngs = false
-      isMinifyEnabled = false
+
+      isMinifyEnabled = true
+      isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
     }
-    debug { signingConfig = signingConfigs.getByName("debugConfig") }
   }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
+
   buildFeatures {
+
     compose = true
   }
+
   testOptions {
     unitTests {
       isIncludeAndroidResources = true
@@ -112,5 +104,5 @@ dependencies {
   androidTestImplementation(libs.androidx.runner)
   debugImplementation(libs.androidx.compose.ui.test.manifest)
   debugImplementation(libs.androidx.compose.ui.tooling)
-  "ksp"(libs.androidx.room.compiler)
+  ksp(libs.androidx.room.compiler)
 }
