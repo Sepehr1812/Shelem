@@ -68,6 +68,14 @@ android {
   }
 }
 
+androidComponents {
+
+  // exclude version and library files from release apk
+  onVariants(selector().withBuildType("release")) {
+    it.packaging.resources.excludes.addAll("META-INF/**")
+  }
+}
+
 // Some unused dependencies are commented out below instead of being removed.
 // This makes it easy to add them back in the future if needed.
 dependencies {
