@@ -1,5 +1,6 @@
 package com.shelem.scoresheet
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,13 +15,19 @@ import androidx.navigation.compose.rememberNavController
 import com.shelem.scoresheet.ui.navigation.ShelemNavGraph
 import com.shelem.scoresheet.ui.theme.ShelemTheme
 import com.shelem.scoresheet.ui.viewmodel.ShelemViewModel
+import com.shelem.scoresheet.util.LocaleHelper
 
 class MainActivity : ComponentActivity() {
 
     private val viewModel: ShelemViewModel by viewModels()
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.applyLocaleToBaseContext(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LocaleHelper.ensureDefaultPersianLocale(this)
         enableEdgeToEdge()
 
         setContent {

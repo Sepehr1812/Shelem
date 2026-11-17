@@ -168,7 +168,8 @@ fun HomeScreen(
     viewModel: ShelemViewModel,
     onNavigateToSetup: () -> Unit,
     onNavigateToBoard: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showLanguageSwitch: Boolean = LocaleHelper.isLanguageSwitchSupported()
 ) {
     val ongoingGamesWithRounds by viewModel.ongoingGamesWithRounds.collectAsStateWithLifecycle()
     val finishedGamesWithRounds by viewModel.finishedGamesWithRounds.collectAsStateWithLifecycle()
@@ -346,47 +347,49 @@ fun HomeScreen(
                         .testTag("theme_toggle_button")
                 )
 
-                Spacer(modifier = Modifier.height(4.dp))
+                // 2. Change Language (Moved from AppBar) - Only shown on Android 13+
+                if (showLanguageSwitch) {
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                // 2. Change Language (Moved from AppBar)
-                NavigationDrawerItem(
-                    label = {
-                        Text(
-                            text = stringResource(R.string.drawer_toggle_language),
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Language,
-                            contentDescription = stringResource(R.string.toggle_language),
-                            tint = GoldAccent
-                        )
-                    },
-                    badge = {
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = GoldAccent.copy(alpha = 0.15f),
-                            border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.6f))
-                        ) {
+                    NavigationDrawerItem(
+                        label = {
                             Text(
-                                text = if (isPersian) "EN" else "فا",
-                                style = MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = GoldAccent,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                text = stringResource(R.string.drawer_toggle_language),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.SemiBold
                             )
-                        }
-                    },
-                    selected = false,
-                    onClick = {
-                        LocaleHelper.toggleLanguage(context)
-                    },
-                    modifier = Modifier
-                        .padding(NavigationDrawerItemDefaults.ItemPadding)
-                        .testTag("language_toggle_button")
-                )
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Language,
+                                contentDescription = stringResource(R.string.toggle_language),
+                                tint = GoldAccent
+                            )
+                        },
+                        badge = {
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = GoldAccent.copy(alpha = 0.15f),
+                                border = BorderStroke(1.dp, GoldAccent.copy(alpha = 0.6f))
+                            ) {
+                                Text(
+                                    text = if (isPersian) "EN" else "فا",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = GoldAccent,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                )
+                            }
+                        },
+                        selected = false,
+                        onClick = {
+                            LocaleHelper.toggleLanguage(context)
+                        },
+                        modifier = Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+                            .testTag("language_toggle_button")
+                    )
+                }
 
                 // Divider between the first 2 items and the remaining items
                 HorizontalDivider(
